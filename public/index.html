@@ -126,19 +126,50 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f0f2f5;color:#222;height
 /* ── Edit Tag Modal ── */
 .edit-overlay{position:fixed;inset:0;background:rgba(10,20,50,.5);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .18s}
 .edit-overlay.open{opacity:1;pointer-events:all}
-.edit-box{background:#fff;border-radius:10px;box-shadow:0 16px 50px rgba(0,0,0,.25);width:380px;max-width:92vw;padding:0;transform:translateY(12px);transition:transform .18s}
+.edit-box{background:#fff;border-radius:10px;box-shadow:0 16px 50px rgba(0,0,0,.25);width:480px;max-width:95vw;max-height:90vh;padding:0;transform:translateY(12px);transition:transform .18s;display:flex;flex-direction:column;overflow:hidden}
 .edit-overlay.open .edit-box{transform:translateY(0)}
-.edit-hdr{padding:12px 18px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:8px}
+.edit-hdr{flex-shrink:0;padding:12px 18px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:8px}
 .edit-hdr h3{font-size:13px;font-weight:700;color:#1a1a2e;flex:1;margin:0}
-.edit-body{padding:16px 18px}
+.edit-body{padding:16px 18px;flex:1;overflow-y:auto}
 .edit-row{margin-bottom:12px}
 .edit-row label{display:block;font-size:10px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
 .edit-row input,.edit-row select{width:100%;padding:8px 10px;border:1.5px solid #d0d5dd;border-radius:6px;font-size:12px;outline:none;transition:border-color .15s;box-sizing:border-box}
 .edit-row input:focus,.edit-row select:focus{border-color:#1565c0;box-shadow:0 0 0 3px rgba(21,101,192,.1)}
 .edit-row input[readonly]{background:#f5f5f5;color:#999;cursor:default}
-.edit-foot{padding:10px 18px 14px;display:flex;gap:8px;justify-content:flex-end;border-top:1px solid #f0f0f0}
+.edit-foot{padding:10px 18px 14px;display:flex;gap:8px;justify-content:flex-end;border-top:1px solid #f0f0f0;flex-shrink:0}
 .edit-foot button{padding:7px 18px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid;transition:all .15s}
 .edit-cancel{background:#f5f5f5;color:#666;border-color:#d0d5dd}
+.pipe-tag-row{display:flex;gap:6px;align-items:center;}
+.pipe-tag-row input{flex:1;padding:5px 8px;border:1px solid #ddd;border-radius:4px;font-size:12px;}
+.pipe-tag-row button{background:none;border:none;color:#f44336;cursor:pointer;font-size:16px;padding:0 4px;line-height:1;}
+.etab-bar{display:flex;border-bottom:2px solid #eee;margin:0 0 12px 0;gap:2px;flex-shrink:0;padding:0 18px;}
+.etab{background:none;border:none;padding:7px 14px;font-size:12px;font-weight:600;color:#999;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;border-radius:4px 4px 0 0;transition:all .15s;}
+.etab.active{color:#1565c0;border-bottom-color:#1565c0;background:#f0f5ff;}
+.etab-pane{display:none;}.etab-pane.active{display:block;}
+.cond-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.cond-row label{width:130px;font-size:11px;color:#666;flex-shrink:0;}
+.cond-row input[type=number]{width:90px;padding:5px 8px;border:1px solid #ddd;border-radius:4px;font-size:12px;}
+.cond-row input[type=number]:focus{outline:none;border-color:#1565c0;}
+.vis-btns{display:flex;gap:6px;flex:1;}
+.vis-btn{flex:1;padding:6px 4px;border:2px solid #eee;background:#fafafa;border-radius:6px;cursor:pointer;font-size:11px;font-weight:700;text-align:center;transition:all .15s;}
+.vis-btn.sel-Low{background:#e8f5e9;border-color:#4caf50;color:#2e7d32;}
+.vis-btn.sel-Moderate{background:#e3f2fd;border-color:#2196f3;color:#1565c0;}
+.vis-btn.sel-High{background:#fff3e0;border-color:#ff9800;color:#e65100;}
+.vis-btn.sel-Severe{background:#ffebee;border-color:#f44336;color:#c62828;}
+.lv-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;}
+.lv-badge.Low{background:#e8f5e9;color:#2e7d32;}
+.lv-badge.Moderate{background:#e3f2fd;color:#1565c0;}
+.lv-badge.High{background:#fff3e0;color:#e65100;}
+.lv-badge.Severe{background:#ffebee;color:#c62828;}
+.lv-badge.empty{background:#f5f5f5;color:#aaa;}
+.scale-tab{background:none;border:1px solid #ddd;padding:3px 8px;font-size:10px;cursor:pointer;border-radius:4px;color:#666;}
+.scale-tab.active{background:#1565c0;color:#fff;border-color:#1565c0;}
+.scale-row{display:flex;align-items:center;gap:6px;padding:4px 6px;background:#f8f9fb;border-radius:6px;}
+.scale-row input[type=text]{width:80px;padding:3px 6px;border:1px solid #ddd;border-radius:4px;font-size:11px;}
+.scale-row input[type=number]{width:70px;padding:3px 6px;border:1px solid #ddd;border-radius:4px;font-size:11px;}
+.scale-row input[type=color]{width:32px;height:24px;border:none;cursor:pointer;border-radius:4px;padding:0;}
+.scale-row .op-label{font-size:10px;color:#888;width:20px;text-align:center;}
+.scale-row button{background:none;border:none;color:#f44336;cursor:pointer;font-size:14px;padding:0 2px;}
 .edit-cancel:hover{background:#eee}
 .edit-save{background:#1565c0;color:#fff;border-color:#1565c0}
 .edit-save:hover{background:#0d47a1}
@@ -178,6 +209,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f0f2f5;color:#222;height
     <button class="ctab" data-mode="rl" onclick="setMode('rl',this)">⏳ Remaining Life</button>
   </div>
   <span style="margin-left:auto;font-size:10px;color:#bbb;padding-right:4px">Scroll=zoom • Drag=geser • Dbl-click=edit tag</span>
+  <button class="btn" id="btn-push-tags" style="margin-left:6px" title="Simpan semua tag ke database" onclick="pushAllTags()">☁ Push Tags ke DB</button>
   <button class="btn success" id="btn-download" style="margin-left:6px" title="Download HTML dengan tag yang sudah diedit">⬇ Download HTML</button>
 </div>
 
@@ -882,41 +914,134 @@ Tag: 186" data-tag="186" data-uid="G0498"><rect x="705.5" y="-688" width="48" he
 <div class="edit-overlay" id="edit-overlay">
   <div class="edit-box">
     <div class="edit-hdr">
-      <h3>✏️ Edit Tag</h3>
+      <h3 id="edit-title">✏️ Edit Tag</h3>
       <button class="x-btn" onclick="closeEdit()">✕</button>
     </div>
-    <div class="edit-body">
-      <div class="edit-row">
-        <label>Label Asli (referensi)</label>
-        <input type="text" id="edit-orig" readonly="">
-      </div>
-      <div class="edit-row">
-        <label>Tag Baru</label>
-        <input type="text" id="edit-tag" placeholder="Masukkan tag baru...">
-      </div>
-      <div class="edit-row">
-        <label>Tipe</label>
-        <select id="edit-type">
-          <option value="">— Pilih Tipe —</option>
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-        <option value="Column / Tower">🏛️ Column / Tower</option><option value="DESALTER">📦 DESALTER</option><option value="DESALTER WATER SURGE DRUM">📦 DESALTER WATER SURGE DRUM</option><option value="Fired Heater">🔥 Fired Heater</option><option value="HGO STRIPPER">📦 HGO STRIPPER</option><option value="Heat Exchanger">♨️ Heat Exchanger</option><option value="Heat Exchanger\nTag: E-113 Bot\nStatus: Normal">📦 Heat Exchanger\nTag: E-113 Bot\nStatus: Normal</option><option value="LGO STRIPPER">📦 LGO STRIPPER</option><option value="Level Controller">📊 Level Controller</option><option value="MAIN FRACTIONATOR">📦 MAIN FRACTIONATOR</option><option value="Pipe/Line No.">📏 Pipe/Line No.</option><option value="Pressure Diff. Controller">📊 Pressure Diff. Controller</option><option value="Process Line">〰️ Process Line</option><option value="Process Stream">〰️ Process Stream</option><option value="Pump">💧 Pump</option><option value="SPLITTER">📦 SPLITTER</option><option value="Vessel">🛢️ Vessel</option></select>
-        <div class="edit-info">Atau ketik manual di bawah</div>
-        <input type="text" id="edit-type-custom" placeholder="Tipe custom (opsional)" style="margin-top:6px">
-      </div>
+    <!-- Tab bar -->
+    <div class="etab-bar">
+      <button class="etab active" id="etab-tag"        onclick="switchEditTab('tag',this)">🏷 Tag</button>
+      <button class="etab"        id="etab-visual"     onclick="switchEditTab('visual',this)">👁 Visual</button>
+      <button class="etab"        id="etab-corrosion"  onclick="switchEditTab('corrosion',this)">🔬 Corrosion</button>
+      <button class="etab"        id="etab-rl"         onclick="switchEditTab('rl',this)">⏳ Life</button>
+      <button class="etab"        id="etab-settings"   onclick="switchEditTab('settings',this)" style="margin-left:auto;color:#888">⚙</button>
     </div>
-    <div class="edit-foot">
+    <div class="edit-body">
+
+      <!-- ── TAB: Tag ── -->
+      <div class="etab-pane active" id="epane-tag">
+        <div class="edit-row">
+          <label>Label Asli (referensi)</label>
+          <input type="text" id="edit-orig" readonly="">
+        </div>
+        <div class="edit-row" id="edit-row-single">
+          <label>Tag Baru</label>
+          <input type="text" id="edit-tag" placeholder="Masukkan tag baru...">
+        </div>
+        <div class="edit-row" id="edit-row-multi" style="display:none">
+          <label>Tags Pipa <span style="font-size:10px;color:#aaa">(bisa lebih dari satu)</span></label>
+          <div id="edit-tags-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:6px"></div>
+          <button type="button" onclick="addPipeTag()" style="font-size:11px;padding:3px 10px;border:1px dashed #888;background:none;cursor:pointer;border-radius:4px;color:#555">＋ Tambah Tag</button>
+        </div>
+        <div class="edit-row">
+          <label>Tipe</label>
+          <select id="edit-type" onchange="onEditTypeChange(this.value)">
+            <option value="">— Pilih Tipe —</option>
+          </select>
+          <div class="edit-info">Atau ketik manual di bawah</div>
+          <input type="text" id="edit-type-custom" placeholder="Tipe custom (opsional)" style="margin-top:6px">
+        </div>
+      </div>
+
+      <!-- ── TAB: Visual ── -->
+      <div class="etab-pane" id="epane-visual">
+        <div style="margin-bottom:10px;font-size:11px;color:#888">Pilih nilai kondisi visual (1–4)</div>
+        <div class="cond-row">
+          <label>Nilai Visual</label>
+          <div class="vis-btns">
+            <button class="vis-btn" id="vbtn-1" onclick="selectVisual(1)">1<br><small>Low</small></button>
+            <button class="vis-btn" id="vbtn-2" onclick="selectVisual(2)">2<br><small>Moderate</small></button>
+            <button class="vis-btn" id="vbtn-3" onclick="selectVisual(3)">3<br><small>High</small></button>
+            <button class="vis-btn" id="vbtn-4" onclick="selectVisual(4)">4<br><small>Severe</small></button>
+          </div>
+        </div>
+        <div class="cond-row" style="margin-top:8px">
+          <label>Level</label>
+          <span id="edit-visual-badge" class="lv-badge empty">—</span>
+        </div>
+        <div class="cond-row">
+          <label>Catatan</label>
+          <input type="text" id="edit-visual-notes" placeholder="Catatan visual..." style="flex:1;padding:5px 8px;border:1px solid #ddd;border-radius:4px;font-size:12px">
+        </div>
+      </div>
+
+      <!-- ── TAB: Corrosion ── -->
+      <div class="etab-pane" id="epane-corrosion">
+        <div style="margin-bottom:10px;font-size:11px;color:#888">Input nilai → level warna otomatis</div>
+        <div class="cond-row">
+          <label>Corr. Rate (mm/yr)</label>
+          <input type="number" id="edit-corr-rate" step="0.001" min="0" placeholder="0.000" oninput="updateCorrLevel()">
+          <span id="edit-corr-rate-badge" class="lv-badge empty" style="margin-left:6px">—</span>
+        </div>
+        <div class="cond-row">
+          <label>Thickness (mm)</label>
+          <input type="number" id="edit-thickness" step="0.1" min="0" placeholder="0.0" oninput="updateCorrLevel()">
+          <span id="edit-thick-badge" class="lv-badge empty" style="margin-left:6px">—</span>
+        </div>
+        <div class="cond-row" style="margin-top:4px">
+          <label>Level Korosi</label>
+          <span id="edit-corr-badge" class="lv-badge empty">—</span>
+          <span style="font-size:10px;color:#aaa;margin-left:6px">(otomatis dari nilai)</span>
+        </div>
+      </div>
+
+      <!-- ── TAB: Remaining Life ── -->
+      <div class="etab-pane" id="epane-rl">
+        <div style="margin-bottom:10px;font-size:11px;color:#888">Input nilai → level warna otomatis</div>
+        <div class="cond-row">
+          <label>Remaining Life (thn)</label>
+          <input type="number" id="edit-rl-value" step="0.1" min="0" placeholder="0.0" oninput="updateRLLevel()">
+          <span id="edit-rl-badge" class="lv-badge empty" style="margin-left:6px">—</span>
+        </div>
+        <div style="margin-top:12px;padding:10px;background:#f8f9fb;border-radius:6px;font-size:11px;color:#888">
+          Threshold saat ini:<br>
+          🔴 Severe: ≤ <b id="thr-rl-severe"></b> thn &nbsp;
+          🟠 High: ≤ <b id="thr-rl-high"></b> thn &nbsp;
+          🔵 Moderate: ≤ <b id="thr-rl-mod"></b> thn
+        </div>
+      </div>
+
+      <!-- ── TAB: Settings ── -->
+      <div class="etab-pane" id="epane-settings">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:11px;font-weight:700;color:#555">⚙ Custom Color Scales</span>
+          <div style="display:flex;gap:4px">
+            <button onclick="saveScalesToDB()" style="font-size:10px;padding:3px 8px;background:#1565c0;color:#fff;border:none;border-radius:4px;cursor:pointer">☁ Simpan ke DB</button>
+            <button onclick="bakeScalesToHTML()" style="font-size:10px;padding:3px 8px;background:#2e7d32;color:#fff;border:none;border-radius:4px;cursor:pointer">⬇ Bake ke HTML</button>
+          </div>
+        </div>
+        <!-- Scale selector tabs -->
+        <div style="display:flex;gap:4px;margin-bottom:10px;border-bottom:1px solid #eee;padding-bottom:6px">
+          <button class="scale-tab active" onclick="showScaleEditor('visual',this)">👁 Visual</button>
+          <button class="scale-tab" onclick="showScaleEditor('corr_rate',this)">📈 Corr.Rate</button>
+          <button class="scale-tab" onclick="showScaleEditor('thickness',this)">📏 Thickness</button>
+          <button class="scale-tab" onclick="showScaleEditor('rl',this)">⏳ RL</button>
+        </div>
+        <div id="scale-editor-title" style="font-size:10px;color:#888;margin-bottom:6px"></div>
+        <div id="scale-editor-rows" style="display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto"></div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button onclick="addScaleRow()" style="font-size:11px;padding:3px 10px;border:1px dashed #888;background:none;cursor:pointer;border-radius:4px;color:#555;flex:1">＋ Tambah Level</button>
+          <button onclick="applyScalesAndRefresh()" style="font-size:11px;padding:4px 12px;background:#e65100;color:#fff;border:none;border-radius:4px;cursor:pointer">🎨 Terapkan</button>
+        </div>
+      </div>
+      </div>
+
+          <div class="edit-foot">
       <button class="edit-cancel" onclick="closeEdit()">Batal</button>
       <button class="edit-save" onclick="saveEdit()">💾 Simpan</button>
     </div>
+    
+    </div>
+
   </div>
 </div>
 
@@ -930,6 +1055,112 @@ Tag: 186" data-tag="186" data-uid="G0498"><rect x="705.5" y="-688" width="48" he
 const API_URL = (typeof window !== 'undefined' && window.location.protocol !== 'file:')
   ? window.location.origin
   : null;
+
+// ── COLOR_SCALES: fully dynamic color config ──────────────────────────────
+// Each scale = array of levels sorted best→worst (last = worst/most severe)
+// operator: '>=' means value >= threshold triggers this level (corr_rate)
+//           '<=' means value <= threshold triggers this level (thickness, rl)
+// visual: index-based (entry 0 = value 1, entry 1 = value 2, etc.)
+let COLOR_SCALES = {"visual":[{"label":"Low","color":"#4caf50","value":1},{"label":"Moderate","color":"#2196f3","value":2},{"label":"High","color":"#ff9800","value":3},{"label":"Severe","color":"#f44336","value":4}],"corr_rate":[{"label":"Low","color":"#4caf50","value":0.1,"op":">="},{"label":"Moderate","color":"#2196f3","value":0.3,"op":">="},{"label":"High","color":"#ff9800","value":0.5,"op":">="},{"label":"Severe","color":"#f44336","value":1,"op":">="}],"thickness":[{"label":"Low","color":"#4caf50","value":12,"op":"<="},{"label":"Moderate","color":"#2196f3","value":8,"op":"<="},{"label":"High","color":"#ff9800","value":5,"op":"<="},{"label":"Severe","color":"#f44336","value":2,"op":"<="}],"rl":[{"label":"Low","color":"#4caf50","value":15,"op":"<="},{"label":"Moderate","color":"#2196f3","value":10,"op":"<="},{"label":"High","color":"#ff9800","value":5,"op":"<="},{"label":"Severe","color":"#f44336","value":2,"op":"<="}]};
+
+// ── Dynamic level lookup ───────────────────────────────────────────────────
+function getLvAndColor(scaleKey, val) {
+  // Returns { label, color } or null
+  var scale = COLOR_SCALES[scaleKey];
+  if (!scale || !scale.length) return null;
+  var v = parseFloat(val);
+  if (isNaN(v) || v === 0) return null;
+  var op = scale[0].op;
+  var result = null;
+  if (op === '>=') {
+    // Higher value = worse: find highest threshold that val satisfies
+    for (var i = 0; i < scale.length; i++) {
+      if (v >= scale[i].value) result = scale[i];
+    }
+  } else {
+    // Lower value = worse (<=): find lowest threshold that val satisfies
+    for (var i = 0; i < scale.length; i++) {
+      if (v <= scale[i].value) result = scale[i];
+    }
+  }
+  return result;
+}
+
+function getLvFromVisual(val) {
+  var n = parseInt(val); if (!n) return '';
+  var scale = COLOR_SCALES.visual;
+  var entry = scale[n - 1]; // 1-indexed
+  return entry ? entry.label : '';
+}
+function getColorFromVisual(val) {
+  var n = parseInt(val); if (!n) return null;
+  return COLOR_SCALES.visual[n - 1] || null;
+}
+function getLvFromCorrRate(val)  { var r = getLvAndColor('corr_rate', val); return r ? r.label : 'Low'; }
+function getLvFromThickness(val) { var r = getLvAndColor('thickness',  val); return r ? r.label : ''; }
+function getLvFromRL(val)        { var r = getLvAndColor('rl',         val); return r ? r.label : ''; }
+function getLvFromCorrosion(rate, thickness) {
+  var lv1 = getLvFromCorrRate(rate);
+  var lv2 = getLvFromThickness(thickness);
+  // Find worst: compare by index in worst-first ordering from corr_rate scale
+  var labels = COLOR_SCALES.corr_rate.map(function(s){return s.label;});
+  var w1 = labels.indexOf(lv1), w2 = labels.indexOf(lv2);
+  if (!lv2) return lv1;
+  return w1 >= w2 ? lv1 : lv2;
+}
+
+// Get fill color for a tag+mode (used by applyColors)
+function getColorForTag(tag, mode) {
+  var d = COND[tag]; if (!d) return null;
+  if (mode === 'visual') {
+    var n = parseInt(d.visual_value) || 0;
+    if (!n) { // fallback: map visual_level label to index
+      var labels = COLOR_SCALES.visual.map(function(s){return s.label;});
+      n = labels.indexOf(d.visual_level) + 1;
+    }
+    var entry = COLOR_SCALES.visual[n - 1];
+    return entry ? entry.color : null;
+  }
+  if (mode === 'corrosion') {
+    var r = getLvAndColor('corr_rate', d.corrosion_rate);
+    var t = getLvAndColor('thickness',  d.thickness);
+    // worst of the two
+    var labels2 = COLOR_SCALES.corr_rate.map(function(s){return s.label;});
+    if (!r && !t) return null;
+    if (!r) return t.color;
+    if (!t) return r.color;
+    return labels2.indexOf(r.label) >= labels2.indexOf(t.label) ? r.color : t.color;
+  }
+  if (mode === 'rl') {
+    var rl = getLvAndColor('rl', d.rl_value);
+    return rl ? rl.color : null;
+  }
+  return null;
+}
+
+// Push ALL current tags from SVG to DB in one bulk call
+async function pushAllTags() {
+  if (!API_URL) { alert('Fitur ini hanya tersedia saat online di server.'); return; }
+  const btn = document.getElementById('btn-push-tags');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Menyimpan...'; }
+  const all = document.querySelectorAll('#diagram-inner g[data-uid][data-tag]');
+  const tags = [];
+  all.forEach(function(g) {
+    const uid = g.getAttribute('data-uid');
+    const tag = g.getAttribute('data-tag');
+    var tip = g.getAttribute('data-tip') || '';
+    var type = '';
+    tip.split('\n').forEach(function(l){ if(l.startsWith('Type: ')) type = l.slice(6); });
+    if (uid && tag) tags.push({ uid, tag, type });
+  });
+  try {
+    const result = await apiPost('/api/tags/bulk', { tags });
+    alert('✅ ' + (result ? result.saved : tags.length) + ' tag berhasil disimpan ke database!');
+  } catch(e) {
+    alert('❌ Gagal menyimpan: ' + e);
+  }
+  if (btn) { btn.disabled = false; btn.textContent = '☁ Push Tags ke DB'; }
+}
 
 async function apiGet(path) {
   if (!API_URL) return null;
@@ -974,51 +1205,81 @@ const TI = {
 // ══════════════════════════════════════════════════════
 const TMPL_B64 = 'UEsDBBQAAAAIAAmoa1xGx01IlQAAAM0AAAAQAAAAZG9jUHJvcHMvYXBwLnhtbE3PTQvCMAwG4L9SdreZih6kDkQ9ip68zy51hbYpbYT67+0EP255ecgboi6JIia2mEXxLuRtMzLHDUDWI/o+y8qhiqHke64x3YGMsRoPpB8eA8OibdeAhTEMOMzit7Dp1C5GZ3XPlkJ3sjpRJsPiWDQ6sScfq9wcChDneiU+ixNLOZcrBf+LU8sVU57mym/8ZAW/B7oXUEsDBBQAAAAIAAmoa1yD4Sxp7QAAACsCAAARAAAAZG9jUHJvcHMvY29yZS54bWzNks9KxDAQh19Fcm8naWHB0O1F8aQguKB4C8nsbrD5QzLS7tvbxt0uog/gMTO/fPMNTKej1CHhcwoRE1nMN5MbfJY6btmRKEqArI/oVK7nhJ+b+5CcovmZDhCV/lAHhIbzDTgkZRQpWIBVXIms74yWOqGikM54o1d8/ExDgRkNOKBDTxlELYD1y8R4moYOroAFRphc/i6gWYml+ie2dICdk1O2a2ocx3psS27eQcDb0+NLWbeyPpPyGudf2Uo6Rdyyy+TX9u5+98D6hjebireVELtGSM6luH1fXH/4XYVdMHZv/7HxRbDv4Ndd9F9QSwMEFAAAAAgACahrXJlcnCMQBgAAnCcAABMAAAB4bC90aGVtZS90aGVtZTEueG1s7Vpbc9o4FH7vr9B4Z/ZtC8Y2gba0E3Npdtu0mYTtTh+FEViNbHlkkYR/v0c2EMuWDe2STbqbPAQs6fvORUfn6Dh58+4uYuiGiJTyeGDZL9vWu7cv3uBXMiQRQTAZp6/wwAqlTF61WmkAwzh9yRMSw9yCiwhLeBTL1lzgWxovI9bqtNvdVoRpbKEYR2RgfV4saEDQVFFab18gtOUfM/gVy1SNZaMBE1dBJrmItPL5bMX82t4+Zc/pOh0ygW4wG1ggf85vp+ROWojhVMLEwGpnP1Zrx9HSSICCyX2UBbpJ9qPTFQgyDTs6nVjOdnz2xO2fjMradDRtGuDj8Xg4tsvSi3AcBOBRu57CnfRsv6RBCbSjadBk2PbarpGmqo1TT9P3fd/rm2icCo1bT9Nrd93TjonGrdB4Db7xT4fDronGq9B062kmJ/2ua6TpFmhCRuPrehIVteVA0yAAWHB21szSA5ZeKfp1lBrZHbvdQVzwWO45iRH+xsUE1mnSGZY0RnKdkAUOADfE0UxQfK9BtorgwpLSXJDWzym1UBoImsiB9UeCIcXcr/31l7vJpDN6nX06zmuUf2mrAaftu5vPk/xz6OSfp5PXTULOcLwsCfH7I1thhyduOxNyOhxnQnzP9vaRpSUyz+/5CutOPGcfVpawXc/P5J6MciO73fZYffZPR24j16nAsyLXlEYkRZ/ILbrkETi1SQ0yEz8InYaYalAcAqQJMZahhvi0xqwR4BN9t74IyN+NiPerb5o9V6FYSdqE+BBGGuKcc+Zz0Wz7B6VG0fZVvNyjl1gVAZcY3zSqNSzF1niVwPGtnDwdExLNlAsGQYaXJCYSqTl+TUgT/iul2v6c00DwlC8k+kqRj2mzI6d0Js3oMxrBRq8bdYdo0jx6/gX5nDUKHJEbHQJnG7NGIYRpu/AerySOmq3CEStCPmIZNhpytRaBtnGphGBaEsbReE7StBH8Waw1kz5gyOzNkXXO1pEOEZJeN0I+Ys6LkBG/HoY4SprtonFYBP2eXsNJweiCy2b9uH6G1TNsLI73R9QXSuQPJqc/6TI0B6OaWQm9hFZqn6qHND6oHjIKBfG5Hj7lengKN5bGvFCugnsB/9HaN8Kr+ILAOX8ufc+l77n0PaHStzcjfWfB04tb3kZuW8T7rjHa1zQuKGNXcs3Ix1SvkynYOZ/A7P1oPp7x7frZJISvmlktIxaQS4GzQSS4/IvK8CrECehkWyUJy1TTZTeKEp5CG27pU/VKldflr7kouDxb5OmvoXQ+LM/5PF/ntM0LM0O3ckvqtpS+tSY4SvSxzHBOHssMO2c8kh22d6AdNfv2XXbkI6UwU5dDuBpCvgNtup3cOjiemJG5CtNSkG/D+enFeBriOdkEuX2YV23n2NHR++fBUbCj7zyWHceI8qIh7qGGmM/DQ4d5e1+YZ5XGUDQUbWysJCxGt2C41/EsFOBkYC2gB4OvUQLyUlVgMVvGAyuQonxMjEXocOeXXF/j0ZLj26ZltW6vKXcZbSJSOcJpmBNnq8reZbHBVR3PVVvysL5qPbQVTs/+Wa3InwwRThYLEkhjlBemSqLzGVO+5ytJxFU4v0UzthKXGLzj5sdxTlO4Ena2DwIyubs5qXplMWem8t8tDAksW4hZEuJNXe3V55ucrnoidvqXd8Fg8v1wyUcP5TvnX/RdQ65+9t3j+m6TO0hMnHnFEQF0RQIjlRwGFhcy5FDukpAGEwHNlMlE8AKCZKYcgJj6C73yDLkpFc6tPjl/RSyDhk5e0iUSFIqwDAUhF3Lj7++TaneM1/osgW2EVDJk1RfKQ4nBPTNyQ9hUJfOu2iYLhdviVM27Gr4mYEvDem6dLSf/217UPbQXPUbzo5ngHrOHc5t6uMJFrP9Y1h75Mt85cNs63gNe5hMsQ6R+wX2KioARq2K+uq9P+SWcO7R78YEgm/zW26T23eAMfNSrWqVkKxE/Swd8H5IGY4xb9DRfjxRiraaxrcbaMQx5gFjzDKFmON+HRZoaM9WLrDmNCm9B1UDlP9vUDWj2DTQckQVeMZm2NqPkTgo83P7vDbDCxI7h7Yu/AVBLAwQUAAAACAAJqGtc6jNKv14MAACuXwAAGAAAAHhsL3dvcmtzaGVldHMvc2hlZXQxLnhtbK2cXXObSBaG/wqlqZravYhFd9PQZBxXObZT49kk640d51qxsa2KJDQSjjP76xewomb7nO63a/BFPizzHngAwUMD5/Cp3nzbPlRVk/xYLlbbN5OHplm/nk63Nw/VcrY9qNfVqv3NXb1Zzpr2x839dLveVLPbPrRcTGWa5tPlbL6aHB32n11sjg7rx2YxX1UXm2T7uFzONn+9rRb105uJmPz84NP8/qHpPpgeHa5n99Vl1XxeX2zan6b7KrfzZbXazutVsqnu3kyOxetTkZou0U9yPa+etoP/Jx3L17r+1v1wfvtmkk662qsq+etyvZi3c1OTpKnX76u75qRaLNqK2SSZ3TTz79VFO9mbyde6aepl9/t2OZtZ0350t6n/W636eVaLqp22XZo1mfi5yK5oB/nnbokne6BuoYb//7nk7/o1266pr7NtdVIvvsxvm4c3EzNJbqu72eOi+VQ//V7t1pbu6t3Ui23/d/L0PK2eJDeP23Zhdtl2AZbz1fO/sx+7lTyYXkpPQO4CMjagdgHlBITxBLJdIOtXzDNJvxpOZ83s6HBTPyWbfuoed19lvwLaLXrTTdGv5H7C9tP5qtvZLptN+9t5W7A5OvvP5/OLD2cfr5L355dXya+/GCnkb8nJ8fllog/kQXo4bdr5dxNPb9o/7Xz3M5e7mWv/zGU/c+mZ+cf6/6v3mbfhzNXsPpkmZ38+ztftPt8k56dMjRNQY76umNRpOHXZ7ueP2+Qfp8972z8Da0btV4DqSypPyV9/KY0xvyXn23nyrV7Uy6TDu52tkm4RD5J/9Z/tZlyvu2/4bHGQ/DFb3bfTPH6dPSQP7RGm2hwEFibbL0zWL0zWL0x3FPp+JA6n34fr/nkK7Vnck1cizbjVDWL14nG5arfaVf1UbbgVH85/mW1W89V9AFHvETVBlA6iDs5LiFfvWkrBUYaT7+ab6jb5vWoPhixjOP2xO7gtAoj5HjEniMpBzBHi2SshJIcYTnZwydmPm4d2/+Mhw3kIWewhCwKZOZBFDKQ+5ijDUUzpyxMes+cxhEc7PCaGJ0+Op285pHAaI4XzcMOVe9CSgOYOaBkDWnCQ4SSGDOchpEjtSTUlmIWDuZskzClTjhNEMSgocNxLWPKuNc0Q7sAhBME1Lq6IwWWPqyAagRsugDestKSSkJYuqYwhZQ+vIBpBGi7QbdHkeeuGcK2eCEWVIHV5VQyvYnnD0QjecAG8Za38CMZ+XP0RYRHZobIKBKIRqOECGNVKkKAWJFwNEtCDOlTNooajEagjXUhYGRLUhoSrQyLGh2TOoo4VIlAAq62wTiSoFAnXikSMFkn27AqiEazhAnizWl0S1JeEK0wixpikYVHH6hIogFGtMAlqTMJVJhE2lzPfFQvIRXD6CtDBACtHksqRcO1Ihg2lI2LPoCCHiUCBD/Vq3tTtlVxo3GMwvkHFSLhmJMN20qEq9jIFBCNYfQUokjUgSQ1IuAokwxrSI7GXKSAYgeQrQJGs5UhqOdK1HBk2jR7phEUa6zjeAhTJ2oykNiNdm5Fho+iR+NGzsS7jLUCRrLVIZuzGtRYZNocz3wAVyEUQ+QpQIisnksqJdOVEhgWhI+IHMUAwAslXgCJZB5HUQaTrIDLsAT0Sf3QYayDeAhTJuoakriFd15Dh832HxPojyEUQ+QpQIqsUkiqFdJVCYqUo+P1urFN4C9BhdOsUijqFdJ1CYaco2P0OBDGStwBFsu6gqDtI1x0UdgdWcEEugihaHZRVB0XVQbrqoLA6lCzRWHPwFqBEg9s31ByUaw4KmoNI2W8SCEYgRZuDsuagqDko1xwUNAeR8t+ksebgLUCRrDkoag7KNQcFzUEIfiuNVQdvAYpk1UExd3lcdVBQHYTgt9JYdfAWoEhWHRRVB+Wqg4LqINiBRpCLIAoXiBtYVVYqFJUK5UqFglIhWJkFuQjYaKlQVioUlQrlSoWCUiGM5wYWiEZARWtFZrUio1qhXK3IoFYI9owFcpjIW4ASWavIqFUo1yqysB28Z69zUaj6Xi2Sk3rVbOrFwgMULnG+mqFvWGZlI6OyoVzZyMCtGpYznLmYr6vp+/bD5GN9wEKG8zGQ1j8y6h+Z6x8ZuD/DjqOBEKYM52MoB8+lUCXJyJMp4NZMxt6qACmMGa0jmdWRjOpI5upIBm6/ZOzlJEhhnHA+7iyXWUvJqKVkrqVk4O4Lv93CIQw68kGUzGpLxjyK4mpLBu668BszHMKM4XzMV9D6SkZ9JXN9JQM3XHL+NBhOYcyRt1oyqzAZVZjMVZgMPJ5SsNfbIIUho+VFW3nRVF4yV140eArFsDoNUhDHm6c41lw0NZfMNRcNnjIx7DcNpDBO9GCItn6iqZ9krp/osCvIlH08CKQwTvRIiLYmoqmJaNdEdFgKJD9GClIYJ5yPO6lpayOa2oh2bUSHvULyR3yQwqTRNqIHT8RSG9HkmdiwF0j+cTyQwjjRAyPaKoemyqFd5dDhsz//bBYIYZpwPuJ0rK10aCod2pUOHT7/S/5hO5DCmNG3WLS1C808/urahQ6f56Vk7QKkME70UIi2HqGpR2jXI3TYCKTid8KRHuHNE5zcekROPUK7HpGHjUAq1iNACuJ48xTHekROPUK7HpGHjUDyV5MghXGiPSK3HpFTj9CuR+TAI3iakRoB8hEHvNzqRU71Inf1Igd6oflXGkbqBcjH6UVu9SKnepG7epEDvdCK36Ij/cKbpzzWL3LqF7nrFznwC836BUhhnJcY7cgHL95Q9cjJqzdAPVgvBCEMOlo9cqseOVWP3FWPHKhHwd63ACmMGa0euVWPnKpH7qpHDtTDsJdhIIVxwnn8aHBujSRnXrtxjSQPu4VK+VP4SCMB+bgvYWFlpaCykruyUoS1Q7FiDEIQFOQjvoSFdZiCOkzuOkwRthHFX7SBFMaMdpjCOkxBHSZ3HaYI64TS7DEFpDBO9FhIYWWloLJSuLJShLVB5TzOSFnx5imONZKCGknhGkkRVgtWR0AGw4TzMd8oqykF1ZTC1ZQiLAyaPQ2AEKaMHgUprIoUVEUKV0WKsBXk/FFwpIp485Rm8LIvVY6CvO4bloeSdX8QwjTRxlFY4yiocRSucRThc3/J3mQAIUwTPdZRWLMoqFkUrlkUwBFO2QcKUGpTbbePmyo5nd/dHYAnC0CtiEOFsYphmJd7XcUw4bM9/442MIxNfdMiJ90m5BhBPO6lXmMdw1DHKFzHMGFbOPn0+fSMRQWWsUNtP6tmSxY2XCBOG401EEMNpHANxIRd4t+XLCkQEEwabSDGGoihBmJcAzFhl7j8wuIAAcE4LzFcYqycGConxpUTA/qHHF+dfWJhgaBg2OgBE2NNxFATMa6JGCAV3Qt/3lYQIPu4XLMsLzFaYqyiGKooxlUUA2yjewvQiwmyPsxwLOb9P2PNxVBzMa65GCAh3WtYXkiQ9UGOfjTEDFqXUJ8xpHkJUBPfe1ko5+OLNhljTcZQkzGuyRjgJN2rSywHyPk4XmJwpLTmUlJzMa65lMBCOkTf7oiyHkwQi9gdS6stJdOLxNWWEuiH73UtlPPxvYSslFZWSiorxpWVEnhHh+jdjCDrw3yJ5iOllZiSSkzpSkwJfKR7p4tFBDkfYvT4SWkVpaSKUrqKUgLV8L3IhXI+jmgxKa2YlFRMSldMSiwmpXe3+3ti4o1RFmsfJbWP0rWPEtqHSL0sf88+QCzyK2T9o6T+Ubr+UUL/EOxQEMr5EF/iTZrS6kdJ9aN09aOE+sE/BY9yPsSx3dIG7dKolJSkYRqUEuEVSJT1EY4eTxHpsFsa9ZKS9kuDYiIyHyYMezhRLgp00CctpXJSkk5pKbQT4TUwGPaCjn73pr0WG4AyfdJIo7QUdkq79p2/Ufa6vTCvFjxp9IBKe+E1IOJaoZFeaGnYK659fWtgMMAztgdaOmiCljJd0FLSBi0NW0dHyfd7Q8EAZbSxtNcnAx7qLP0WcHjC5nHtuzyFwQBPOBmx1QZNzlKmy1lK2pylYbm49l28wmCAcuR7Nu23f0DJ9DdLSYOzNOwXp2eXx+89433+7BBpbBezdNDGLGX6mKWkkVka9okrniU0BvKTJVw4dNCfDpqNL6vNfd+zfZvc1I+rpuuRPfh00HS+a1bufq5en/Zdz6e2zHMn+w+zzf18tU0W1V1bMj3o7oRunjuIP//Q1Ou+c/lzA/nnbud9u+tugvb3d3Xd/Pyhm8G+Rf/R/wBQSwMEFAAAAAgACahrXC2D3jDYDAAAZmoAABgAAAB4bC93b3Jrc2hlZXRzL3NoZWV0Mi54bWylnV1z2zYWhv8KR53p7F40EgACBFPbM4njTDzrZj11671mbNrWRBJVio7T/fVLUoqgxTkHB4Yu2tgyXxziESk9BPhx8tK0XzdPdd1l35eL1eZ08tR167fT6ebuqV5WmzfNul71f3lo2mXV9b+2j9PNuq2r+zG0XEzlbGamy2q+mpydjK9dt2cnzXO3mK/q6zbbPC+XVfv3+3rRvJxOxOTHC7/PH5+64YXp2cm6eqxv6u7P9XXb/zbdt3I/X9arzbxZZW39cDp5J95eiNmYGBe5ndcvm4Ofs6EvX5rm6/DL5f3pZDYZ2l7V2d8368W8r6YmWdesr+qH7rxeLPoW80lW3XXzb/V1v9jp5EvTdc1y+Hu/nl3V9S89tM1/69VYs17U/bL92qzBwttGdo0Onfxrt8aTfYeGlTr8+ceafxzJ9qS+VJv6vFn8Z37fPZ1O7CS7rx+q50X3e/Pyqd7R0kN7d81iM/4/e9kuqyfZ3fOmX5ldtl+B5Xy1/bf6voN8sLyUREDuAjI2oHYB5QWEIQL5LpB7AUX1Qe8CY8+n266P3D5UXXV20jYvWTss3bc2/DDCP5305Xtc89WwEd50bf/XeZ/rzv71788fLm8us9vLmz/fXWU//2SlkL9m5+8ubzL9Rr6ZnUy7vsyw8PSu/69vfl9D7mvIsYYkanxu/r+RMfM+nPmjesym2cVfz/N1v8l32eUHpI1zpo35ukZSH8Kpq/pbvchu55vnaoGkL8Lp8/5N6KpVgJraU1NjS4po6eefSmvtr9m4Pm+zqz49zX5r7uu23w37Hz/1e0D/z03/57bO/rGu26eqm3+tVtnTc/v8kH2pN1U7/VrfzRf/DKxOvl+dfFydfFyd4bPr25k4mX47fMu2S2iq67+IWY69S0ysWTwvV31P/mhe6hZ7v7b5gnq/mhfsbaKKAgB6D0ADANIDoIM9EeKXjz0DgTEIJz/O2/o++1T37yxKYJu2RHrYEjAEVE2AwOwRGIBAeQgMh+DiFyEkhiCcHDqfXXy/e6pWjziEbb4k8j/2DAwEVRmAKPYgCgAi90AUMSD0O4xEOMqTKFJ2CKoogGD3ECyAoD0INgaCyd5N32Mcwmmeg03aLaiqAES5B1ECEMYDUcaAKDAI4SQPoUzZGKiigIGYOZGYAQqFR2G3SBiDnGEYmCjPYdfAa7cGsi5EceBUAqCwPgoRgwL9rmCiEShEGgqqLkTh1E9IgKL0UcgYFOh3BhONQCFTdg+yLCThdE4oKFAzH4WKQaFQFOFoBAqVhIIqC1E4lRSIS/oyKcJauEOBCiUTjUCRpJRkWYjCSaWAVil8rRSsVw4oNIoiHI1AoZNQRLulcHIpoF0KXy9FjF9Kg6I4VjBFumGStSEP55gCSqbwLVPEaKZExYKJRvBI8kyyLEThTFNA1RS+a4oY2ZQWRXGsae4aGGQBbWF7FI7iiNZN4XxTQOEUvnGKsDheUEeiTC6CRZnMIlo7pdNOCbVT+N4pw/I4sED1gsnxLHYNvHIXIctCDs45JXRO4UunDJvjwEGhR6RMMAKESN0oyNIQxsGAI7RO4WunDLvjCAM9LGWCETBk8hcJWRvScOYpoXlK3zxlWB9HGucojWO9c9dAyqYR7Z7SuaeE7il995RhgRxh4APOx5rnroHXHpqRdSEJp54SGdD01VOG/fGCGtNlchEgkryTLAs5OO+U0Dul750yLI8DB3wsjwlGgDBJIKKFUzrhlFA4pS+cMmyNIwj8U/NY3ZRJukmWhSCcbkqom9LXTRl2xgEEehjC5CI42PRvj2jZlE42JZRN6cum5GWzwHePY21TJo1vkmUBCOVMU0HTlL5pKt40C3T3YII8CJWkmmRZCMKppoKqKX3VVLxqoodiTC6Cg0jiEG2ZylmmgpYpfctUvGWWKIdjJVOlSyZZG8I4mK2Gkql8yVSsZIoZ+jHBBCNoqHQa0ZapnGUqaJnKt0zFWqaY4Z8Vx1rmroEkGtGmqZxpKmiayjdNxZqmEPi2caxqqiTVJMtCEE41FTKB7qumYlVTCHyzOFY1VfoAJ1kb0nC+qaBvKt83FeubAp0OYXIRMJJ0kywLOTjdVFA3la+bitVNgR6IMbkIDum6SdaGMJxuKqibytdNxeqmsMQ5BUw0gkeScJJlAYrcCWcOhVP5wpmzwilQv2ByPIc8bT6drAtBOOHMoXAqXzjzsDheoYNXXGg81++8WXVts1gQHNIm08nKkIMTzhwKp/KFM2dm01EM4cz1fF1Pr/oXs8/NG5RB0iw6WRUicJqZQ83Mfc3MmVl0dKyfCfEM0g2TLA1BHJyOCQ0zBydkMnPoOTpnzKR4EnnqgC5ZGYJwcplDucx9ucyZGfQcHaphUjwInb5JRNtl7uwyh3aZ+3aZMxPo+BYRDvEgTNpnZLRU5k4qc+TUTF8qc2bWHN8awiEeQpG+NURbZe6sModWmftWmTNz5gZ3h3CKJ5GulGRpSMIpZQ6VMveVMmfO0CzQ0SomxZMo00lEG6V2RqmhUea+UWrmJE2LHm8xKZaEThq+JKtCCM4mNbTJ3LdJzZyeadGPCCbFQ0hzSbIspOBcUkOXzH2X1GEvlDP0VF0mxVNIH7kkS0MSTik1VErtK6UO26HE53qYFE8i6ZRMsiqE4HRSQ53Uvk7qsBhK/HuTSfEQ0qbEybKQwsElPtAlNbjIJ2yFEj+Nn0nxFJIGKcmqEILTSA01UvsaqcNGiJ+tzYR4BmkaSZaFEJxGaqiR2tdIHTZCiZ++z6R4CukeSZaGJJxHauQyH98jddgIpUQ9kknxJGzSPhGtkNoppIYKqX2F1GEZlArfKY5USJ00HklWBRCMs0cD7VH79mjCHigVao9MioVgkuyRrAohOHs00B61b48m7IESH3dhUjyENHsky0IKzh4NtEft26Nh7BGHcKQ87vKvhhAtjsaJo4HiaHxxNIw4avxa2CPF0aQPRpKlIQlnjwbao/Ht0TD2qBW+QRypjyZ9rpssDVE4hTRQIY2vkIZRSI0qJJPiSSQpJFkVQji4ThwqpAFXijMKiR5MMCGeQdLZlGRVyMAZpIEGaXyDNIxBFuicLpPiIaQbJFkaknAGaaBBGt8gDWOQFh1qYFI8ieTrdsjKEISzSINcKO5bpAn7oJrhAnWkRZokiySrAgiFs8gCWqTxLbII+6BCD6yYEMugSJJIsipk4CSygBJpfIkswjqo8HEGJsVDSDp9kqwKITiHLKBDGt8hi7AOKo1+QDIpHkLSfDZZFUJwDllAhyx8hyzCNqgMDuFIhyySr8shK0MQTiELqJCFr5BF2AVRf2QyPIZ0fyRLQw7OHwvoj4Xvj0XYBDX6XcmEeBA6eXuIVsjCKWQBFbLwFbII26DBvyaOVMgiSSHJqpDBwV2GoEIW4D5DYRks0eNLJsQzSLvFULQ8Fk4eCyiPhS+PRVgDS3TulgnxDNJuL0SWhRCcOBZQHAtfHIuwAqJnQzKZ67a5qzebbMCAIijTEERro3XaaJHbC/naaBkDHK55J282xWSfl2sMgU2SRrIYJOCk0UJpLHxptIz+DVe6kwSYLEUgyRjJYpCAM0YLjbHwjdEy7jdcu0sSYLIUgfQJa7IixOCc0UJntL4zWsb+qAt3uRyFIH3AkawIEThbtNAWrW+LljG/4VJVFAGToxAk3TSILAZ77xzRQke0viNaRveG3pP7AZOlCCQNMJLFIAFnhxbaofXt0DKiR12hy+Wo3qfNTpPVYPedGFoohtYXQ8s43tB9cgNgshSCJC0ki0ECB/eehFpowd0nGcMbLsZFe8/kqN6nn9ZIVoQInBRaKIXWl0LLCB51GS6XoxCkCSFZDXS/dEJYQiG0vhCWvBCW1D7AZQkEu1jKVkBWhBicFZbIvSZ9KyxZKxQzEkOaFZZJVkgWgwScFZbQCq1vhSVrhQIdLOByVO9l6lgJWRAScEJYQiEsfSEsWSHEr4vhchQBlfRJQFaD3XcyWEIZLH0ZLFkZFORhAZelEKSduEhWgwicEZbQCEvfCEvWCEVOIkgzwl3s1QiilbB0SlhCJSx9JSxZJRSkFHNZCkHScCFZDBJwVlhCKyx9KyzZG0beUlrERG/rzabGHonwoUzSQrIcROC0sIRaWPpaWIb17pa6GyCXo/ufLoZkTQjh4HbkUAxLcEPysOANENCJZi5HQ0i/1IWsCSCI2eH9yKEglvCO5GHLu6XGSdggCeJH8rX3TSULIhQObkU+g35YgpuRz8KSd0sNlbDBAAWRvD3QVR2K6cEzb5Z1+zg+a2iT3TXPq277aJr9qwcPSxqemeO/rt5ejE/rmbpmtk9g+q1qH+erTbaoH/omZ2+Gaa52+9yh7S9dsx6fy7N98NH441Nd9f0aFuj//tA03Y9fhgL7R0ud/Q9QSwMEFAAAAAgACahrXLAbgurYEAAAUnwAABgAAAB4bC93b3Jrc2hlZXRzL3NoZWV0My54bWylnW2PGzeyhf9KYxYI7n6I1HwnHdtA2rEQI05ixHt9Pyvjti1EM5qV5DhZ7I+/3Rp5KFcddsmUgWTeuqjWEbv7PKwi+fjTZvvH7kPf75u/bta3uydXH/b7u0fz+e76Q3+z3M02d/3t8Jd3m+3Ncj/8uH0/391t++XbQ9DNeq7b1s9vlqvbq6ePD797tX36ePNxv17d9q+2ze7jzc1y+3fXrzefnlypq8+/+G31/sN+/MX86eO75fv+db//37tX2+Gn+UMrb1c3/e1utblttv27J1ffq0cL1R4iDoe8WfWfdiffN+N7+X2z+WP84cXbJ1ft1dj2bd/8/fpuvRpezVw1+83dy/7d/lm/Xg8t2qtmeb1f/dm/Gg57cvX7Zr/f3Ix/H85zv9wPv3q33fynvz28Zr/uh2OHs7ljB983cmx0fJP/Pp7x1cMbGk/q9PvPZ744KDso9fty1z/brP9v9Xb/4clVvGre9u+WH9f73zaffuyParmxvevNenf4f/Pp/lh31Vx/3A0nc4wdTuBmdXv/dfnXUeST47UuBOhjgD43wBwDDAlQvhBgjwGWvkJbCHDHAHfuK/hjgD9If6/VQegflvvl08fbzadmOx49tDZ+c/i0hp+HL4PAq9ux277eb4c/r4bA/dOffv3lhxevXzQ//frbr8OXb/4RtdLfNc++f/G6cTM9ax/P98PrjAfPr4f/hvYfXkQ/vIg+vIguvMYvmy8bOcR00zH/Wr5v5s3zf39c3Q0Xyb558QNo45nQxuquB1E/TEe97P/s181Pm+1mtwLRz6ejn22221nz23BtNf9zczP/e/tP0MZCOO8Pq+s/bvvdbmzinxMfgHn4AMyhQVNo8Jt/pBjjd83hrT1qXg7R8+bnzdt+O57nvPlxuPyGL6+HP2/75r/NyZv4Znlz913zcEaPmuXt+z+Ww7W7W90s1xPnZh/OzR7OzR7ObbyL/vlUPZ7/edoV7o9wJUm/Va1Fn74Qtll/vLkd3ta/Np/6LeoH9/Gh1A82n9DHfx+k9MnbaWfGmi/f0uJ4mDl9127mHo76Qiv3oJVjWmmilZt800p9uxjkUkiu6cjFatu/bX7shw8diuVqxHJILG8SEctxsUxJK/+glWdakQ+h85JWz79VSiOtpiNHlZrnf11/GC4GrJavUcvDrtV6opYHXctiscKDWIGJZYlY4Ryx3PdIrelQWa37+FSI/3yjQpIFLpmaaUUlC6iDKaxZfNAsMs0c0Syeo5lvvp93SLbpaFm2WNPJIupk2pLbzCKCTpZmBkuWHiRLTDLyUXTpHMkCkms6UpYr1ciVYAcL9HafgFymJJdqsztrmWCBCHY8ZFox3SLFhFBZsmMDNVfmMZQoZ+mV+fmwU+XSrHA7Uye2VjHhIhVOnSMcfFQKoWcIp+qFU7DLJUuVU6DP6VksSJfNutJMukSl0+dIB5+cQugZ0uma6/QYRe5r1iqqmuaq2WJ/ywZbGe5iW6qaOUc1A1WbDj1DNVOlmkGqJReoagZdpSp98a+gYQYBBUiAooCaNvVHDSEOCKFnaFgFBAoQwXCjY7ZNISQodbxMBIojgaJMoEQoGEVzULTp0DNEu28glhoY0BKqBtFAO/pgVYANUokNVIYDxelAUTxQ5/CB9lC2SwHh2EDVAwJwgpq1TDnECaHoSTIqKM4KisKCOocWNLRxQugZ0oWqyxSgwvCAiFQ1gAph5guiZVZQHBYUpQV1Di7oCEW7lBWODXz1ZQpxwQZK8Arxgi0hlsrAoDgxUHrr1LTzf14a8BDizhAt1V+kABwG4VpHhQPkEGYa66YzOGgODoqSg562/6Nu0MIJcbJuuh4bNMQGw65TDbkhtqf/Cr1PZ4rQnCIUxQg9zQKjigaOigiBZ8hYDxEaQEQ7U5Z2Pw0gwpQYQp8M+HOGUBQi9DQJHISD4yJC4BnC6aqbnYYMwYcrNWSIUm/LDKE5Q2jKEHoaBA6iPYOiXUoQxwaqehvAiMECM4zQACNU8emqMzloTg6akoOetv8H5XAS6VJuODbw1d0NphKiKtzDjhICigglP6wzRmiQWaAYoadZ4HkpDyPEnSGgq+96OMUQ/aSIACpUKj51M1VoThWaUoWeRoNRRTyKLgSeIWM9U2iYe9CBQqxGUBGL/S9DheZQoSlU6GkyOCiHHxiXIoWuz0BoyBWJmrGFBmDhire+DBaag4WmYKGn6WAUDlKsEHeGbnVUoSFVMIsHmKJArzoDheZAoSlQaBkoAr5ELyWKYwPjqDds4T4FDzWDmQhDXddCo1REKLkTk4nCcKLQlCiMTBQBXqFCoCzcsYGv7WkGZyGoeVgYgBO2dFszGSAMBwhNAcLIAAGZX4g7QzNVpxlMQCjHNAPs4EoPUZPZwXB20JQdjMwOCWp2KTqYquyDAeQwXpxUMQAOqi1KdlLew8nBUHIwIjmoFt7UhMAzNDN1/QwmH7hoABrizJxD+iYThOEEQV+pMyJBqBbf3S4liGMDNf7DQIoIkckIwMEVHwsZHAwHB0PBwYjgoBTuepeSg6knBwPJwbAMhAGw4GehIFxmBQPqkygrGJEVlMI97lJWMFUVSgamHoyjJsTg3EPB7ZqMCYZjgqGYYERMUDDHKsSdoVmou89BQjD0mbcwkBBKD4dMCIYTgqGEYERCUBDthbgzNIv1FyighMGHsNyDQbmH8hWaUcFwVDAUFYyICioWyruE0DO0q08/GJh+8KwcwiBaGPAVa2czLVhOC4bSghVpQUETJ8TJwh0bqKAsC3ihHbwvpXlbn36wmR4spwdD6cFOU8BLOBgsBR1K3J9tbvfbzXpd0FDVPCAszDvoxMqjUfFSW3pA2AwPlsMDHZ/vrFC9BBWbjnm1uuvnL4dfNr9sZlCuKm6wmBsiHXazGBwKfGozOFgODpaCgxXKlmCOUAiS9aqqV7I40ZDoI8HiREPhWWpP5ipwTKD3zM4KJUoWFtoIUbJgdUkGC/FAOzrYZgEeKFWqFrGZDyznA1pM3FmhPsnC0UkhSlasasqChVjgAs2cWoAFKpVSpzZzgeVcQGePdFaoTMI9bDpI1qs+fWBh+sDTklWLsKBYVW4zFlgwfYFigRVKknAfmw6SNatDAguRQDN7ZgESlHpYBgLLgYAm/jsr1CJ57Mymo2S56mnAYhqgSaSFBTRQqLK0GQUsRwFaqt5ZYepCgKO4QpQsWarrYRAANCsAsQgAipekywDgOABYCgBOmLoQIacLUaJirr76yMF0QcvmEzlg/wu86bLdd9zu07qmzgmTFiK8jQlRsmRVZt9Bsx8TUwuZ/eIEP5fNvuNm31Kz76aNu27hzBghShZM1/cx6Pktq991wPP7omjZ8jtu+R21/G7avWucLhaiZNHqK4wcNP4tnT6wcDBZUCBxl32/476f5rs6N+3gNXYYQpQsWtWkBAdtv08az9g4igcY4KRA7UvtTuYscwJwbNbytJfXeMafECVrV0UADhIAL911iABiaezMZQJwnABo1qFz02Yez70SgmS96gnA4QIi5jcczgwUyNxlBHAcARxFADft5jWe7CdEyaqF2tFGh2uHIvW0DmBAcf6yyyDgwAxmCgJu2tJrDUFAiJI1qyscchACbMvuZAACXNHUZgxwHAMcxQA3bei1wZfmhRjg6nMBDk9F4Kb2qyYx+4wCnqMAHTDv/LSp1waigBAlqubrUcDDTAC3aR6gQHngzGca8JwG6Khc56d9vcZDjUKUrFoVDXhIAzzl5AENhFK2zmcY8BwGaN658wIMYLkuZAFfzwIez1qmiqHR/2LtqM8o4DkKeIoCXkABh9dHuRAFfNXwv4cVQ4oWsi88Gv4vjJv5DAGeQ4CnEOAFCHAG97ELKcDXjf57PMUg0NF/D5x/cbUin62/59bfU+vvBevvoPUXomTBXJ1gwPurmWJDGh55/2KBiz9ZtIh7f8+WLRK8P+RMIUgWrG7JImj7FX1LC49svy8+JbPt99z207RC5wXbH2BpixAlC1Y/Z8AXhv+paMD2D4BZupFl3++57/fU93vB90c4biZEyaLV+X4Pfb+hc28WHvh+U1rdw2ff78G6RdT3+2kHb1rsYC/0/b56woAHtl/NNBvG8Mj2Fw1ZyLY/cNvvqe0P0wbeQCAXgkTNQt1cgYBrfwI1sAE5/lC6LEN2/IE7fk8df5j27gYPlAlRsmJ1MwUCtvzsaRmA5Y/nLR8TMgAEDgCeAkCY9vLGwUeBECXLV1X8E6D514maswDsfyxZjZDdf+DuP1D3H6Z9vPFYrwvdf6hy/wEvVkRv1IsA3P+ZtXkhw0DgMEDvBF2YdvWQBIQYWTtb+0AIEAZUpPQUAAyo4po7IdNA4DQQKA2EaV/voOsQgmTNqvIAAeYBFH1Li4BYoC25jpBZIHAWoAsLdmHa1nv8AL2QBUJ9HiBAIAhcNAAE5T52so4p54HAVjKddvYJjmgIQbJmdZVAAaJAS9eqWgTMAiWXllkgcBagtWxdmHb1CRa2CEGyYHUoECAKtCwFEAAKnLlkXchgEDgY0DnxXZi2+HBugBDzaru5Htf/HvWD2lWtZRpwIoCNBgVMBIUbWsxEEMFqppQIomDux8WcigvmCrEfb+6QWsewr10oF+KAZxOuY/1UgJjZIHI2oJ9LFwWXP67nVJROiC1JV78EUYTTiC0r2YioOqg49zpmHoicB+jcoC4Kzn5cFKYomRBbkqwKBiKEgUiXLlhEAAOFUbSYUSByFIgUBaJg6kurv0hxJZnqi4EiBgE2ayKiNEBxclPM3j9y70/n03ZR8PHjYiVQLiGuJFf9DOEIFyjlE10j8v3FirOYfX/kvp9CRRcFCz/KVbwQhdiSZK5eMmj9E5cMWP8Bzc8xGTFzQOQcECkHRMHSl5Z4keJK2vkqcxbxFgasCigC9++LBiO7/8jdPy2W6aJg5Eelij1NiC2pVZ8KiHgHA7bwUgT+35bKpuLJHgbc/ke2i4Hg5MdVXaBaQlxJrbp9C7DvZwtDRuD7lSr2rWz1I7f69InSRcG2l5ZykeJKSlXZ/AgH/hWbbx6RzfelsrKUbX7iNj9Sm59km59KV6EUW1ArVdn8hFcIopOZFwnX+RRG/VN29gnsVECdfRKdvWqLatU5+1Q35J/wkH8sPPKO2iGL70tD2Clb/MQtfqQWP4kWX8FBMimupFt9tU/Clf/M4yfg8VUs3exTtvmJ2/xEbX4SbT6e8CvFleSqt/kJ1vxrdsdPyObr4l412eYnbvMTtflJtPmqCJBSbEmyequf4BC/YQm5BKx+sQg7ZaefuNNP1Okn0ekrW1SszumneqefsNOns0sXCTj9YpI8ZW+fuLeniyF0SfT2qshGUmxJsapqnwTtvWXgnVC1jy72r+zvE/f3dN+bLolbD7wpGVYh9E2/2/VrKFfd4H6C5r5l1VEJmvuSEcvmPnFzn6i5T9Mm/U1pEXgprqxV/RzfBNcFNXRJ9kVCHr8tCnayPRn3+PTe2KVprz4KBit9pLiyYHUzfBOu76FOfJGgzcdSqfZ0azJu8xPfnGzaq78pjRqKgUW5PkfWbUoG3b6iC7MtHg4kOZDSxjPtyc5kLTf8tKaj+3zQlG54vx4pcEK3Osf/OY4NTbMNyVo8z5casfnJdsU3/fb9YV/pXXO9+Xi7v99U+OG3x42xzaPFYQdm+vtxw+zDNsi5mfvdtn9ebt+vbnfNun83NNnOxhT99n6P6fsf9pu7J+OWyvebXB++/dAvh44zHjD8/d1ms//8w/gCD9uIP/1/UEsDBBQAAAAIAAmoa1wi4uk1WA8AAKh5AAAYAAAAeGwvd29ya3NoZWV0cy9zaGVldDQueG1spd1vb9tGEgbwr0K4QNECV4n7f5k6BpLUvgbnBkHSy71WbdoWKouuRMft4T78kRLjVWdmdzarAm1jWUONn5D0j6vV8vSp2/y+vWvbvvrzfrXevjy56/uHF/P59uquvV9sZ91Dux6+c9Nt7hf98OXmdr592LSL613R/Wou69rO7xfL9cnZ6e6x95uz0+6xXy3X7ftNtX28v19s/nrdrrqnlyfi5MsDH5a3d/34wPzs9GFx235s+38/vN8MX82ft3K9vG/X22W3rjbtzcuTV+LFhah3FbunfFq2T9uDP1fjz/Jb1/0+fvH2+uVJfTJue91Wf318WC2HV1MnVd89XLY3/Zt2tRq2qE+qxVW//Ny+H5728uS3ru+7+/H7Q5/9oh8eutl0/23Xu9dsV+3w3KGbB/Tk/UamjY4/5B9TxyfPP9DY1OGfv3R+sUt2SOq3xbZ9063+s7zu716e+JPqur1ZPK76D93Tz+2Ulhm3d9Wttrv/Vk/755qT6upxOzQz1Q4N3C/X+/8v/pxCPni+lJECORXI3AI1FShQIGykQE8FOvcVzFRgQIGqIwV2KrC76PdZ7YL+adEvzk433VO1GZ89bG38w+5va/h6aGwIeLked9uP/Wb49nIo7M8+nP/y6u27t+/+WV2+vTivvv3GSyF/rN68evuxMjM5q0/n/fA645PnV8O/w/afX0Q+v4jcvYiMvMa77u8b2dW8Ttf8urit5tX5H4/Lh+Eg6au3PxHbeMNsY/nQElU/pasu28/tqvpwSVSepys/tON5Yrm+rS6XN231Xb+4e1x/T2znIr2df7V9u1msbxfrRPjqOXy125iKbOzbbxrv/Y/V/sfqhh1q0S+3L6qPw9eb9rtvV/2Ppr9bf/+P6ufhINx9Ler9A79010Mf/f5JYnrWZff03bCX+NpMD1X/q171i8dquV0Oe+b6cbFKdK2fu9a7rve75Xhu/XwmTuefD3eQ/TNM5Od684OoNbVPMGXd6vF+Pexav3ZP7YbaO/b1LrZ3dE/UjrEvEurwx2lmzd9/ootYaygm8xyTQTFJEJNJ/rxC/HAxJCWopNKVF8tNe1393A47AJmTKcnJ4JxkjXKKNYZyss85WZSTAjlZLqfzH4SQVE7pyjGh6vzPq7vhiKWT2tf7WP1w2FFRWRyVn4Fj5CLWGkrKPSflUFIaJOVykjKvqKjSpXxUrmSncsTB52bg7/8i1hqKyj9H5VFUBkTlc6Ky1av5ayqtdDWfli9JyxOHoJ5ZkFasNZRW85xWg9ICG33d5KTlqKTSlXxS+/omUv/lFx0VV0PsXGIGDpmLWH8oLlEHmdUoMAcCm56STkzWVGJMKR/ZtIGv3LumKm73inaHAzugrECBeRiYyAmM/G3IlGYEJooCE+TZy8DAYt3hwALLhUSBNTAwmRMY+WuRKc0ITBYFJok9TMwcDCzWHQ4sUFoorNIaJqZyElNkYunSjMRUESWmMmAJtIvFusOJBcYLwvEQ8iJN8ikxEvNMaUZiuvjMLyjUS3Tqj7aIYwusF9j1AsJesLIfYzNkbOnSjNiKdC8I3g+XQRCt0e5wYgH4AgtfQOKLHONLSyZ2LPKnDXxtYoTyZYNPZtnOFwH6AktfQOqLHOtLkmRMaUZiRdgXhPalwollc18E7wsMfgHFL3LILz2Z2LHenzbw1ad/gvwOXXRHu8OJBfMLjH4B1S/SeD+PDU8wdRlxlatfUOxX+EyW7X4Z3C+x+wWEv0zrfcyMNBlTx2cmi9QvCfUPiIUHZbQ7HFdQv8TqF5D9Mm33MS5FjlcwhRl5iaJDUhLqx6M70e5wXgdj8Rj9Aqpfpum+y4scsWAKM/KSZXkR6Dc4r2zzy2B+ic0vofllGu67vN6QeR0r/mkDJecwSah/8Cs6KLPZLwP7JWa/hOyXabvvQqPf1TkW/dMGxkEGcgv79z7IzAjzSzSUGG0QRxbIL4mhfEh+mXb7eew9D6YuI7Ei70va+1AW0e5wXMH7EntfQu/LNNrHuOhhaqYwI68i7UtK+xZdiEe7w3kF7UusfQm1L9Nk3+VFn/aPtb4ssr6krG/RFXi0O5xXsL7E1pfQ+jIN9jEv8mKSqcuIq2hkX1JD+wrHlQ19GaAvMfQlhL7koe/ow/FY6cty6Ut6gB/RIlv6KkhfYelLKH3FS9+RxyRTyIc2baAkNEV5v0aj/NEWcWjB+wp7X0LvK9775BU4U5eRWdEYv6LG+A2OK5v7KnBfYe5LyH3Fc78h4zpW+6pohF8R2B/iggqLdofjOpgsg7WvoPYVq31Rk+cxpjAjr7LxfUVIHw/wRLvDeQXoKwx9BaGvWOiLmj6FHQt9VTRZR1HIx2yNdofzCspXWPkKKl+xyheC3r+OZf60ga/evwjn+5mqD/+BvzCjveL0AvoVMY0Hol+x6BeC3tuORf+0gYLLSkXAH7Is2h4OLKhfYfUrqH7Fql+Q71YydRl5ueK8CPijvLLVr4L6FVa/gupXrPoFeRHO1GXkVaR+RanfzySMK1v9KqhfYfUrqH7Fql/4yPwnpjQjsabsfEaYH08Yi3aHEtOB/BqTX0Hya5b8guQYU8fHpYsG9zU1pQe/Dx7tDscVsK8x9hXEvk6j/ZIceOWKdrOh33TrftOtVpG0RPH1kabAL9BAT7RJHFkAv8bgVxD8mpnVQyaWrnm/fGjnl8OD1btuRsYly+OiwK9mHsaVDX4dwK8x+DUEv2am9JBvtTFFfF6q6GAkqC8tGq6INoejOpiSj62v0aR8Zi6PJuejMFV8VmWT8mnno6yyna+D8zV2vobO18wEHk0OHjJVfFZlxteU8WFS2abXwfQam15D02tm4g69U6WL+KDK5uVrwvIN/m2YrXkdNK+JuflQ85qZsUPvU+kiPqqi4XtNDd8Tn4rJhrwOkNcY8hpCXjNTdSytrHQVn1WR4jWleOJcla14HRSvseI1VLxm5uY7cjyVqeKzaoqyoobsPT4Es/1ugt8N9ruGfjfMrHxPXk4zVWxWU33B1bQhAK/RBWK0PxxX8LvBftfQ74aZk+/JUxZTxcdVNjHHEHI3aNeKNoezCnA3GO4awt2kES5r8rMeTBWfVTndDU13OMkk2iEOLNDdYLobSHeTVrik36BlqvjAiuxuKLtLdI6PNoezCnY32O4G2t2kFS5pOzBVfFblM/ANNQOf+Lho/udqDz5YiwFv0Edr0xSX9GfVmCo+sKK5OIbwO4GtaHM4q0B4gwlvIOFNWuP0R4iYIj6qomk4hp6Gg85Z2YQ3gfAGE95Awpu0xiX9+TSmis+qyPCGMjz+tFW0OZxVMLwhPl8LDW/SGpeSNDxTxWdVZHhDf7QWHYLZhjfB8AYb3kDDm7TGpaKPwSMNb8rG4A2BeINRmm14GwxvseENNLxNa1wq0vBMFZuVLRqAt/QAPFoLIBvwNgDeYsAbCHibprikx/yYKj6roqk2lvC7xO/tRJvDWQXAWwx4AwFvGcDTUR3p96m+4NLQUh+mxXtWtt5t0LvFerdQ75bRu6HX4zhS77ZI75aaTu/QpWG0OZxV0LvFerdQ75bRu1H0vnUk323R0Lulht6JwzBb7jbI3WK5Wyh3y8jdkHJnqvisyobeLUF3PDsw2hzO6mBZHCx3ixbGYeROXhUyRXxURXK3lNwdUkO0ORxVkLvFcrdQ7paRuyMnhjBVfFZFcrf05Hn4nk60OZxVkLvFcrdQ7paRuyeHspgqPqsiuVtK7hbvV9lyt0HullgXB8rdpg2ualqjR8rdFo2+WwLug0bR6Spb7i7I3WG5Wyh3lza4Ii+emSI2KlcEd0cvhgMvnqPN4agC3B2Gu4Vwd2mCK3r8iqnisyqCu6PgDneqaGs4qcB2h9luIdtdWuDKkCd2popPqmh6vKPMrvF6Z9lodwHtDqPdQbS7NL+VpbM6Eu2uCO2Oni4DT+zR5nBWAe0Oo91BtLu0vkmxMzV8UkVid/RkGThlLdocTiqI3WGxOyh2l7a3IbXAFPFRlYHdEWBHJ/VsrrvAdYe57iDXXVrelv79dyTXXRHXHcV1PHM02hyO6mAZS8x1hxayTMO7IUcXmCI+qrI1LKlFLPGKENHmcFRB6w5r3UGtu7S7G3L6B1PER1WEdUdgXTgcVTbWXcC6w1h3EOsuzW5ypjtT837TXbXbbTWGRQbVlA7wOULr6PjLproPVPfE6pWQ6p5R97jyT3RtVKb28f6BSsoXQd3TI+yQCdGecFAB6h5D3UGoe4bc43I/0aCY2lhQ5bPbPTW7vUYAjTaG0wpY9xjrDmLdM+weFxaJpsXUxtIqkrqnpI5HQaM94aCC1D2WuodS94y5Y8uJcHWxkMrXqvHU4HoNc8pWug9K91jpHirdM+Ie18Ugc2LqYjmVz4jx1IwYjUQVbQwnFZTusdI9VLpnwD0mFT30mNpYWmVG94TR8ehntCccVFC6x0r3UOmeAXds6RCuLhZSkc895XM8YSHaEw4p+Nxjn3voc89QewwpujcxtbGgij+T6qnxdDSWF20LZ3WwzjwGukcrzTPWHtcJIXNi6mI5+fJzFOVzhVeYz/a5Dz732Oce+twz1o4tDsLVxZIqm//iCZj7mU9+pj7aIYqsCVBvMNQ9hHrDQ72JHYhcbSS2qexrY2sIqcMxqmhHOKbA9IZYXB4yvWGZLupoTGVMn8oKzlcNoXS8GFS0LZxVQHqDke4h0hsW6YIcqeLqYjkVAb2hgF6jk3q0JxxSAHqDgd5AoDcs0OnPnnJ1sZCKxtAbyuYNujiO9oRDCjpvsM4bqPOG1bmIXu5xtbGgiobQG3rSCzyLR3vCQQWcNxjnDcR5w+Jc6GhQZTifyr42KMLmxLqR0Z5wUAHnDcZ5A3HesDgX0asYrjYWVPHaMQ2BdPzprWhbOKtg9AYbvYFGb9gV4j/F6MmUfmq323ZFhuXKbEAI3eC9KlvoTRB6g4XeQKE3aWl/iq3ZzdXFYyo3ekMbHekg/zZQB/eBwkZv0J2g0tYesyKnvHB18ayK5ro01FwXPIAX7QrFJOrD+z9hmTf4DlBpXn+KjeGxhdGovlQWrZtfUytD4svkeHdEZAd3gKqx0ht0D6g6Te1PseE8tjARWdm9n2pq0osn0uKVPj+4Cex9u7nd3a13W111j+t+f6vW50en2w2rFxe7+9rCx8fbEO9uLhs2s7+H8S+Lze1yva1W7c2wyYHJQz+b/Z1791/03cPuRrX7Wwfv/njXLoa9ZXzC8P2bruu/fDG+wPPNmc/+D1BLAwQUAAAACAAJqGtcKQDuCgwEAAD5DgAAGAAAAHhsL3dvcmtzaGVldHMvc2hlZXQ1LnhtbKWXbW/aOhTHv8pRJk2d1BESWkoZIKWUbaxAuTzsvjbEEAsnzmynbFI//I4dSru7S4iUFxDbsc/5Hef4b7uzF3KnIko1/Ix5orpOpHXadl21jmhMVE2kNME3GyFjorEqt65KJSWhHRRz16/Xm25MWOL0OrZtKnsdkWnOEjqVoLI4JvLXHeVi33U856VhxraRNg1ur5OSLZ1TvUynEmvu0UrIYpooJhKQdNN1Aq8d+A0zwPb4zuhevSmDCWUlxM5UhmHXqRsiyulaGxMEH0+0Tzk3lpDjx8Goc/RpBr4tv1j/bIPHYFZE0b7g/7JQR12n5UBINyTjeib2X+khoGtjby24sv+wP/StO7DOlBbxYTASxCzJn+TnYSLcfJx1ek806XWk2IO0vazx5ouVozuMcW162JCse8Bmlpjpn2uJrxla1L3pYLGcfFs+wHQw+fJlOQmCCSwG4+koWAw6rkbfpp+7xh/6PDr2zzv2c8fNvxz/Zaxx3lgjN3ZzIgqvBsvp6DG4h8E/y+F0PJgs4GJupqsNgx8ZSzFh9IeCeK7OI1ydiscimGXSVilZ066D60BR+USdHgC8f9fy/eYnGCoGO8FFDAuyvYQFS+klhCSBuSY6UwVs1+fZrqux3RHJFOCyyjhhCCUZprRp2tGPV3ChqKacRBDh8qayaBqb51Gb1VC/kWSLk5atkCchMTnMaY5WQHZznuymdMK2zhtrFSesf0zYh8fJ/XA+PKbrd6YywqEvkpBZgXKxLKVQeXlGjaayZAsjtqFF3+L2PORttW/xYKd+RJ8oh4jIzKQQU6wNIyRwYSzwkxBNsfgVPeNjjl0lLWD26iUErV6NeplyQUJYUanYhmiYDVDs+gP73vM/YfprAtykFtlhpoUM802zIugyKuxVg54SpZnBOUoIKIOYmihw3qldFRb9qHdFyCX02ysv4F4JBffOSHijBp8fZ+NgAZPhKBgWwZcQa6+iWtukzhP5+TWRn/NEfj4kMlxEmcw25iNoK0UkZZrwokXplRBzr6Kav8rFDKHbgIq5I5giisWEX8JaJFpEbajXPP+6CLWEmHsV1XwRsfUuoUqdpGzVChlLyLp3UtfLMf6puP8BxSWHUgGaRFnyCu35tUYRdYn9w2uVX30llN67LV59VzXoB7PgsCkVHfxKKLRfUaHvMpxgknIUPDw09YPhHFUYVkigCvd4v4QQ+xWF+AGpAC2v8Ax/2EmQTQvB8cRUxFbmxHxScUtuEoyzCPJb2y9MU8CkZWYH+5hZ0iK8EgruN6rhmZtLvqdyhFMZAmoq7e5q5jBkZCtJ/H+Q7pubj7kUjonEwBRwukGSeu0GFVPmuHlFi9RejlZCYyj5PcmeEE0HfL8RQr9UzP3qeNvt/QZQSwMEFAAAAAgACahrXOtl4YUNBAAAzh0AAA0AAAB4bC9zdHlsZXMueG1s3Vltz6I4FP0rhB8wgCiPbNREEZNNdjeTzPNhv1Yp2qS8bKnP6vz67aUoqL3G2WFmyWIMbW/Puae3L5Qyq+SZ0y8HSqV1ynheze2DlOUvjlPtDjQj1aeipLmypIXIiFRZsXeqUlCSVADKuDNy3cDJCMvtxSw/ZptMVtauOOZybo+uRZa+/ZrMbS8Y25ami4qEzm33k+u6tmOsOnmoChWdxs9ilhZ5684Df1CiqEhGrQ/C53ZEONsKBrCUZIyfdfEICnYFL4QlVUMVtwcl1Vdt9nQOYtDwZCwvRO1ce7j3sxSMcLBvG4bWgdhvlXR3U183XkZ9E7qvEDKMMA4mnu6KC2H4Ct+3eUeb460m8cjtkfCxOd9J6K7Hb0uvR8LVmxd50Y9V6L1CeEPi11efPTsJJpGLqqpvMJkZ5+1kHtu6ZDEriZRU5BuVqUF14YPJatLv51LN5r0gZ280sV8GVAVnCbjcR+aAOh3od5K28eiRVC0Fftw3aTuFeiSNpnEQhb03P3ZXo55JV6t1vFn1rjRar3tXel1JeiQNlt4qXPZMul7HsX5q9TlO4834CWl9UyvMthAJFTf7E120mHGaSgUXbH+AuyxKWNEKKYtMJRJG9kVO6vXngugirXofNbflod4H3S7ymyhcj2ttULXx8SKirlvLeRGgal50v4jQlTsNaxIqXjvK+Rcg+TNtF2ZFdUo7uzQX9mj5Naki3SQ1jc6Aoy6b5u7STv8Vr1Wyj0KujqoJeZ3/61hI+lnQlJ3q/Cm9CsDYvZZ9dMdOypKfl5zt84zqxr/scDEjF5x1KAT7qrzBo2+nCqiwrQ8qJNt1SiBEpxSXOWpl+l2Z3rBk+q3M8Y+PJswog0jrb0HKd3qSzXbkqeIxMroGFtifK7OPwHYm1mTAE2vSygwG3P9BK/NtwDLfWpnTAcuctjLDAcvsTCHv/tH3n+tsjnKGv4o2B0nDF4r0vDe0nu/oDDs6f8L2qZfn0pP95FAld4eDPyzNTrOV77wv3LwtXEstODSa23/AiS5vNVjbI+OS5U3uwJKE5g8vDYpeki2nt/yqfkJTcuTy/Wqc2236d5qwYxZea32GuDS12vRv8JblBdeDK+WL5Qk90SRqsuq16fZcqL4AcG9pT2UfLRhG28wWsGF+MAUYRqMwP/+n9kzR9mgbpm1qtExRzBTFaJTJEtU/zI8ZE6rL3NIw9P0gwCIaRUYFERa3IIC/mQ3TBgjMD3j6tljjvY2PkOfjAOvTZyMEayk+ErGW4rEGizlugAhDc29jfgCB9QI2dsC/2Q+MKTPG96FXMW3YDMYtYYhZYCyax2gQINEJ4GfuH2yW+H4Ymi1gMyuA7yNmC8xG3IIpAA2YRX+Jce6eR87lOeW0X3AX/wBQSwMEFAAAAAgACahrXJeKuxzAAAAAEwIAAAsAAABfcmVscy8ucmVsc52SuW7DMAxAf8XQnjAH0CGIM2XxFgT5AVaiD9gSBYpFnb+v2qVxkAsZeT08EtweaUDtOKS2i6kY/RBSaVrVuAFItiWPac6RQq7ULB41h9JARNtjQ7BaLD5ALhlmt71kFqdzpFeIXNedpT3bL09Bb4CvOkxxQmlISzMO8M3SfzL38ww1ReVKI5VbGnjT5f524EnRoSJYFppFydOiHaV/Hcf2kNPpr2MitHpb6PlxaFQKjtxjJYxxYrT+NYLJD+x+AFBLAwQUAAAACAAJqGtcYPy1ioABAABtBAAADwAAAHhsL3dvcmtib29rLnhtbLWT3W7bMAyFX8XQA8xpmhRoUPcm/VmBogvaIfeKTddsJNGj6Gbr04+yYdTFgGA3uZJ5SNAfCZ6rA/F+R7TPfnsXYmEakXaV57FswNv4jVoImqmJvRUN+TWPLYOtYgMg3uXz2ewi9xaDub4ae204nwYkUApSUDEJW4RD/MynMHvHiDt0KH8K0387MJnHgB4/oCrMzGSxocN3YvygINa9lEzOFeZsSGyBBct/5JcE+dPuYq+I3T1bBSnMxUwb1shR+oq+v1XGd9DiIeqE7tAJ8I0VuGfqWgyvqY1OkU/G6PcwvsMSV/w/a6S6xhJuqOw8BBn2yOASYIgNttFkwXoozO2vDttUk2bSnzxUw3yiYJNt8Qo1wQ9Vj3g6nC3GzrpsTaHClJxQzY9QzU9LtSZmil9xzo/gnJ8W5xmSJfRiskesYcK0OMK0OC3TBqQLb91+QrM8QrPsL3087wpqDFA9aaeoulqt3HCWnv4c54vl2aVaqnNurdqP8Ei2Gt0yOv36L1BLAwQUAAAACAAJqGtchTlInccAAAA8BAAAGgAAAHhsL19yZWxzL3dvcmtib29rLnhtbC5yZWxzxZRNDoIwEEavQnoARgExMcDKDVvjBZo6UMJPm84Y8faiLKCJCzeGVfNN0/e9zTS7YCe5MQPpxlIw9t1AudDM9gRASmMvKTQWh+mmMq6XPEVXg5WqlTVCtNul4NYMUWRrZnB9WvyFaKqqUXg26t7jwF/A8DCuJY3IIrhKVyPnAsZuGRN8jn04kUVQ3nLhyttewNZCkScUbS8Ue0Lx9kKJJ5RsL3TwhA5/FCJ+dkiLzZy9+vSP9Ty9xaX9E+ehv0bHtwN4n0XxAlBLAwQUAAAACAAJqGtcUN3/yysBAADvBQAAEwAAAFtDb250ZW50X1R5cGVzXS54bWzNlE1PwzAMhv9K1evUZoyPA1p3Aa6wA38gtO4aNV+KvdH9e9x2mwQaFVMn0UuixPb7vLGlLN/3HjBqjLaYxRWRfxQC8wqMxNR5sBwpXTCS+Bg2wsu8lhsQi/n8QeTOElhKqNWIV8tnKOVWU/TS8DUqZ7M4gMY4euoTW1YWS++1yiVxXOxs8YOSHAgpV3Y5WCmPM06IxVlCG/kdcKh720EIqoBoLQO9SsNZotECaa8B02GJMx5dWaocCpdvDZek6APIAisAMjrtRWfDZOIOQ7/ejOZ3MkNAzlwH55EnFuBy3HEkbXXiWQgCqeEnnogsPfp90E67gOKPbG7vpwt1Nw8U3Ta+x99nfNK/0MdiIj5uJ+LjbiI+7v/Rx4dz9bW/oHZPjVT2yBfdP7/6AlBLAQIUAxQAAAAIAAmoa1xGx01IlQAAAM0AAAAQAAAAAAAAAAAAAACAAQAAAABkb2NQcm9wcy9hcHAueG1sUEsBAhQDFAAAAAgACahrXIPhLGntAAAAKwIAABEAAAAAAAAAAAAAAIABwwAAAGRvY1Byb3BzL2NvcmUueG1sUEsBAhQDFAAAAAgACahrXJlcnCMQBgAAnCcAABMAAAAAAAAAAAAAAIAB3wEAAHhsL3RoZW1lL3RoZW1lMS54bWxQSwECFAMUAAAACAAJqGtc6jNKv14MAACuXwAAGAAAAAAAAAAAAAAAgIEgCAAAeGwvd29ya3NoZWV0cy9zaGVldDEueG1sUEsBAhQDFAAAAAgACahrXC2D3jDYDAAAZmoAABgAAAAAAAAAAAAAAICBtBQAAHhsL3dvcmtzaGVldHMvc2hlZXQyLnhtbFBLAQIUAxQAAAAIAAmoa1ywG4Lq2BAAAFJ8AAAYAAAAAAAAAAAAAACAgcIhAAB4bC93b3Jrc2hlZXRzL3NoZWV0My54bWxQSwECFAMUAAAACAAJqGtcIuLpNVgPAACoeQAAGAAAAAAAAAAAAAAAgIHQMgAAeGwvd29ya3NoZWV0cy9zaGVldDQueG1sUEsBAhQDFAAAAAgACahrXCkA7goMBAAA+Q4AABgAAAAAAAAAAAAAAICBXkIAAHhsL3dvcmtzaGVldHMvc2hlZXQ1LnhtbFBLAQIUAxQAAAAIAAmoa1zrZeGFDQQAAM4dAAANAAAAAAAAAAAAAACAAaBGAAB4bC9zdHlsZXMueG1sUEsBAhQDFAAAAAgACahrXJeKuxzAAAAAEwIAAAsAAAAAAAAAAAAAAIAB2EoAAF9yZWxzLy5yZWxzUEsBAhQDFAAAAAgACahrXGD8tYqAAQAAbQQAAA8AAAAAAAAAAAAAAIABwUsAAHhsL3dvcmtib29rLnhtbFBLAQIUAxQAAAAIAAmoa1yFOUidxwAAADwEAAAaAAAAAAAAAAAAAACAAW5NAAB4bC9fcmVscy93b3JrYm9vay54bWwucmVsc1BLAQIUAxQAAAAIAAmoa1xQ3f/LKwEAAO8FAAATAAAAAAAAAAAAAACAAW1OAABbQ29udGVudF9UeXBlc10ueG1sUEsFBgAAAAANAA0AVgMAAMlPAAAAAA==';
 function downloadTemplate() {
-  // Generate Excel template dynamically using current EQUIP_LIST tags
-  if (typeof XLSX === 'undefined') {
-    alert('SheetJS belum dimuat, coba lagi dalam 2 detik');
-    return;
+  if (typeof XLSX === 'undefined') { alert('SheetJS belum dimuat, coba lagi sebentar'); return; }
+
+  var tags = EQUIP_LIST.map(function(e){ return e.tag; });
+  var scaleRL   = COLOR_SCALES.rl        || [];
+  var scaleCR   = COLOR_SCALES.corr_rate || [];
+  var scaleTH   = COLOR_SCALES.thickness || [];
+  var scaleVis  = COLOR_SCALES.visual    || [];
+
+  // Build threshold info string for notes row
+  function scaleNote(scale, op) {
+    return scale.map(function(s){ return s.label+'('+ op + s.value+')'; }).join(', ');
   }
+  var visLabels = scaleVis.map(function(s,i){ return (i+1)+'='+s.label; }).join(', ');
 
-  const tags = EQUIP_LIST.map(e => e.tag);
-
-  // Sheet: Visual Condition
-  const wsVisual = XLSX.utils.aoa_to_sheet([
+  // ── Sheet: Visual Condition ─────────────────────────────────────────────
+  var visHeader = ['Tag / Equipment ID', 'Nilai Visual', 'Catatan'];
+  var visNote   = ['', visLabels, 'Opsional'];
+  var visExample = [
+    ['C-104', 2, 'Korosi ringan di bagian atas'],
+    ['11-E-112', 3, 'Penipisan signifikan'],
+    ['V-101A', 1, '']
+  ];
+  var wsVis = XLSX.utils.aoa_to_sheet([
     ['CAIS - Template Visual Condition'],
-    ['Tag', 'Visual Level', 'Catatan'],
-    ['', '(Low / Moderate / High / Severe)', ''],
-    ...tags.map(t => [t, '', ''])
+    visHeader,
+    visNote,
+    ...visExample,
+    ...tags.map(function(t){ return [t, '', '']; })
   ]);
 
-  // Sheet: Corrosion
-  const wsCorr = XLSX.utils.aoa_to_sheet([
+  // ── Sheet: Corrosion ────────────────────────────────────────────────────
+  var corrHeader = ['Tag / Equipment ID', 'Corr. Rate (mm/yr)', 'Thickness (mm)'];
+  var corrNote   = ['', scaleNote(scaleCR,'>='), scaleNote(scaleTH,'<=')];
+  var corrExample = [
+    ['C-104', 0.343, 15.5],
+    ['11-E-112', 0.639, 3.5],
+    ['V-101A', 0.12, 20.0]
+  ];
+  var wsCorr = XLSX.utils.aoa_to_sheet([
     ['CAIS - Template Corrosion'],
-    ['Tag', 'Corrosion Level', 'Corr.Rate (mm/yr)', 'Thickness (mm)'],
-    ['', '(Low / Moderate / High / Severe)', '', ''],
-    ...tags.map(t => [t, '', '', ''])
+    corrHeader,
+    corrNote,
+    ...corrExample,
+    ...tags.map(function(t){ return [t, '', '']; })
   ]);
 
-  // Sheet: Remaining Life
-  const wsRL = XLSX.utils.aoa_to_sheet([
+  // ── Sheet: Remaining Life ───────────────────────────────────────────────
+  var rlHeader = ['Tag / Equipment ID', 'Remaining Life (thn)'];
+  var rlNote   = ['', scaleNote(scaleRL,'<=')];
+  var rlExample = [
+    ['C-104', 19.9],
+    ['11-E-112', 4.2],
+    ['V-101A', 12.0]
+  ];
+  var wsRL = XLSX.utils.aoa_to_sheet([
     ['CAIS - Template Remaining Life'],
-    ['Tag', 'RL Level', 'Remaining Life (thn)'],
-    ['', '(Low / Moderate / High / Severe)', ''],
-    ...tags.map(t => [t, '', ''])
+    rlHeader,
+    rlNote,
+    ...rlExample,
+    ...tags.map(function(t){ return [t, '']; })
   ]);
 
-  // Sheet: Equipment
-  const wsEquip = XLSX.utils.aoa_to_sheet([
+  // ── Sheet: Equipment ────────────────────────────────────────────────────
+  var wsEquip = XLSX.utils.aoa_to_sheet([
     ['CAIS - Template Equipment'],
-    ['Tag', 'Tipe', 'Status'],
-    ['', '', '(Normal / Warning / Monitored / Inactive)'],
-    ...EQUIP_LIST.map(e => [e.tag, e.type || '', e.status || ''])
+    ['Tag / Equipment ID', 'Tipe', 'Status'],
+    ['', '', 'Normal / Warning / Monitored / Inactive'],
+    ...EQUIP_LIST.map(function(e){ return [e.tag, e.type||'', e.status||'']; })
   ]);
 
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, wsVisual,  'Visual Condition');
-  XLSX.utils.book_append_sheet(wb, wsCorr,    'Corrosion');
-  XLSX.utils.book_append_sheet(wb, wsRL,      'Remaining Life');
-  XLSX.utils.book_append_sheet(wb, wsEquip,   'Equipment');
+  var wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, wsVis,   'Visual Condition');
+  XLSX.utils.book_append_sheet(wb, wsCorr,  'Corrosion');
+  XLSX.utils.book_append_sheet(wb, wsRL,    'Remaining Life');
+  XLSX.utils.book_append_sheet(wb, wsEquip, 'Equipment');
 
   XLSX.writeFile(wb, 'template_cais_conditional.xlsx');
 }
@@ -1090,30 +1351,56 @@ async function handleUpload(type, file){
         else EQUIP_LIST.push({tag,type:tp,status:st,color:'',status:st});
         updated++;
       } else if(type==='visual'){
-        if(!COND[tag]) COND[tag]={tag,type:'',visual_level:'Low',visual_notes:'',corrosion_level:'Low',corrosion_rate:0,thickness:0,rl_value:0,rl_level:'Low'};
-        if(VALID_LV.has(lv)) COND[tag].visual_level=lv;
+        if(!COND[tag]) COND[tag]={tag,type:'',visual_level:'',visual_notes:'',corrosion_level:'',corrosion_rate:0,thickness:0,rl_value:0,rl_level:''};
+        // Support numeric value (1-4) or label text
+        var rawVal = lvCol>=0 ? String(row[lvCol]||'').trim() : '';
+        var numVal = parseInt(rawVal);
+        if (!isNaN(numVal) && numVal > 0) {
+          COND[tag].visual_value = numVal;
+          COND[tag].visual_level = getLvFromVisual(numVal);
+        } else if (VALID_LV.has(rawVal)) {
+          COND[tag].visual_level = rawVal;
+        }
         if(notCol>=0) COND[tag].visual_notes=String(row[notCol]||'').trim();
         updated++;
       } else if(type==='corrosion'){
-        if(!COND[tag]) COND[tag]={tag,type:'',visual_level:'Low',visual_notes:'',corrosion_level:'Low',corrosion_rate:0,thickness:0,rl_value:0,rl_level:'Low'};
-        if(VALID_LV.has(lv)) COND[tag].corrosion_level=lv;
-        if(crCol>=0)  COND[tag].corrosion_rate=parseFloat(row[crCol])||0;
-        if(thkCol>=0) COND[tag].thickness=parseFloat(row[thkCol])||0;
+        if(!COND[tag]) COND[tag]={tag,type:'',visual_level:'',visual_notes:'',corrosion_level:'',corrosion_rate:0,thickness:0,rl_value:0,rl_level:''};
+        var cr  = crCol>=0  ? parseFloat(row[crCol])||0  : 0;
+        var thk = thkCol>=0 ? parseFloat(row[thkCol])||0 : 0;
+        COND[tag].corrosion_rate  = cr;
+        COND[tag].thickness       = thk;
+        COND[tag].corrosion_level = getLvFromCorrosion(cr, thk);
         updated++;
       } else if(type==='rl'){
-        if(!COND[tag]) COND[tag]={tag,type:'',visual_level:'Low',visual_notes:'',corrosion_level:'Low',corrosion_rate:0,thickness:0,rl_value:0,rl_level:'Low'};
-        const rlv = rlvCol>=0 ? parseFloat(row[rlvCol])||0 : 0;
-        COND[tag].rl_value=rlv;
-        const autoLv = rlv<5?'Severe':rlv<10?'High':rlv<15?'Moderate':'Low';
-        if(VALID_LV.has(lv)) COND[tag].rl_level=lv; else COND[tag].rl_level=autoLv;
+        if(!COND[tag]) COND[tag]={tag,type:'',visual_level:'',visual_notes:'',corrosion_level:'',corrosion_rate:0,thickness:0,rl_value:0,rl_level:''};
+        var rlv = rlvCol>=0 ? parseFloat(row[rlvCol])||0 : 0;
+        COND[tag].rl_value = rlv;
+        COND[tag].rl_level = getLvFromRL(rlv);
         updated++;
       }
     }
     
     statusEl.className='upload-ok';
     statusEl.textContent=`✅ Berhasil: ${updated} baris diperbarui`;
-    if(currentMode!=='default') applyColors();
+
+    // Always refresh colors regardless of current mode
+    applyColors();
     renderTbl();
+
+    // Sync all updated COND entries to DB (non-blocking)
+    if (API_URL && type !== 'equipment') {
+      const tags = [];
+      for(let r=hdrRow+1; r<rows.length; r++){
+        const tag = String(rows[r][tagCol]||'').trim();
+        if(tag && COND[tag]) tags.push(tag);
+      }
+      Promise.all(tags.map(tag => apiPost('/api/conditions', COND[tag])))
+        .then(results => {
+          const saved = results.filter(Boolean).length;
+          statusEl.textContent = `✅ Berhasil: ${updated} baris diperbarui, ${saved} tersimpan ke DB`;
+        });
+    }
+
   }catch(err){
     statusEl.className='upload-err';
     statusEl.textContent=`❌ Error: ${err}`;
@@ -1148,12 +1435,19 @@ function setMode(m,btn){
   document.getElementById('leg-title').textContent=(title[m]||'Kondisi')+':';
 }
 
-function getLv(tag,mode){
-  const d=COND[tag]; if(!d)return null;
-  if(mode==='visual')return d.visual_level;
-  if(mode==='corrosion')return d.corrosion_level;
-  if(mode==='rl')return d.rl_level;
+function getLv(tag, mode) {
+  var d = COND[tag]; if (!d) return null;
+  if (mode === 'visual') {
+    var n = parseInt(d.visual_value)||0;
+    if (n) return getLvFromVisual(n);
+    return d.visual_level || null;
+  }
+  if (mode === 'corrosion') return getLvFromCorrosion(d.corrosion_rate, d.thickness) || d.corrosion_level || null;
+  if (mode === 'rl')        return getLvFromRL(d.rl_value) || d.rl_level || null;
   return null;
+}
+function getColorForMode(tag, mode) {
+  return getColorForTag(tag, mode);
 }
 
 function applyToMap(){ applyColors(); closeModal(); }
@@ -1170,28 +1464,43 @@ function applyColors(){
     });
     return;
   }
-  const tagLv={};
-  Object.values(COND).forEach(d=>{
-    const lv=getLv(d.tag,currentMode);
-    if(lv)tagLv[d.tag]=lv;
+  // Build color map: tag → fill color
+  var tagColor = {};
+  Object.values(COND).forEach(function(d) {
+    var allTags = (d.tag||'').split(' | ').map(function(t){return t.trim();}).filter(Boolean);
+    allTags.forEach(function(t) {
+      var col = getColorForTag(t, currentMode);
+      if (col) tagColor[t] = col;
+    });
   });
-  all.forEach(g=>{
-    const tag=g.getAttribute('data-tag');
-    const lv=tagLv[tag];
-    const saved=origColors.get(g);
-    if(!saved)return;
-    if(!lv){
-      // No condition data — grey fill only
-      saved.forEach(s=>{
-        if(s.fill&&s.fill!=='none')
-          s.el.setAttribute('fill','#d0d0d0');
-      });
-      return;
-    }
-    const col=LV_COLORS[lv];
-    saved.forEach(s=>{
-      if(s.fill&&s.fill!=='none')
-        s.el.setAttribute('fill', col.fill);
+
+  all.forEach(function(g) {
+    var fullTag = g.getAttribute('data-tag') || '';
+    var tags    = fullTag.split(' | ').map(function(t){return t.trim();}).filter(Boolean);
+    var saved   = origColors.get(g);
+    if (!saved) return;
+
+    // For multi-tag: pick worst color (highest index in scale)
+    var worstColor = null;
+    var scaleLabels = COLOR_SCALES[currentMode === 'rl' ? 'rl' : currentMode === 'corrosion' ? 'corr_rate' : 'visual'].map(function(s){return s.label;});
+    var worstIdx = -1;
+    tags.forEach(function(t) {
+      var col = tagColor[t];
+      if (!col) return;
+      // find which scale entry this color belongs to
+      var scale = COLOR_SCALES[currentMode === 'rl' ? 'rl' : currentMode === 'corrosion' ? 'corr_rate' : 'visual'];
+      var idx = scale.findIndex ? scale.findIndex(function(s){return s.color===col;}) :
+        (function(){ for(var i=0;i<scale.length;i++){if(scale[i].color===col)return i;} return -1; })();
+      if (idx > worstIdx) { worstIdx = idx; worstColor = col; }
+    });
+
+    saved.forEach(function(s) {
+      if (!s.fill || s.fill === 'none') return;
+      if (worstColor) {
+        s.el.setAttribute('fill', worstColor);
+      } else {
+        s.el.setAttribute('fill', '#d0d0d0'); // no data
+      }
     });
   });
 }
@@ -1203,30 +1512,73 @@ const tipEl=document.getElementById('tip');
 const sbEl=document.getElementById('sb');
 let tipOn=false;
 const LC={Low:'#4caf50',Moderate:'#2196f3',High:'#ff9800',Severe:'#f44336'};
+function getLvColor(lv, mode) {
+  // Get color from COLOR_SCALES for given level label
+  var scaleKey = mode==='rl'?'rl': mode==='corrosion'?'corr_rate': 'visual';
+  var scale = COLOR_SCALES[scaleKey]||[];
+  for (var i=0; i<scale.length; i++) { if (scale[i].label===lv) return scale[i].color; }
+  return LC[lv]||'#999';
+}
 
 function showTip(e,g){
-  const tag=g.getAttribute('data-tag')||'';
-  // Always use richest tooltip for this tag
+  const fullTag=g.getAttribute('data-tag')||'';
+  const tags=fullTag.split(' | ').map(t=>t.trim()).filter(Boolean);
+  const isMulti=tags.length>1;
+
+  // For single tag use existing logic; for multi, use first tag for type/status lookup
+  const tag=tags[0]||'';
   const raw=BEST_TIPS[tag]||g.getAttribute('data-tip')||'';
   const lines=raw.split('\n'); let lt='',type='',st='';
   lines.forEach(l=>{if(l.startsWith('Tag: '))lt=l.slice(5);else if(l.startsWith('Type: '))type=l.slice(6);else if(l.startsWith('Status: '))st=l.slice(8);});
-  const d=COND[tag]; const ticon=TI[type]||'📦';
+  const ticon=TI[type]||'📦';
+
   let html='';
-  if(lt)html+=`<span class="t-tag">${lt}</span>`;
-  if(type)html+=`<div class="t-row">${ticon} <span>${type}</span></div>`;
-  if(currentMode==='default'&&st)html+=`<div class="t-row"><span class="t-dot" style="background:#1565c0"></span><span style="font-weight:600;color:#1565c0">${st}</span></div>`;
-  if(d&&currentMode!=='default'){
-    const lv=getLv(tag,currentMode);
-    const c2=LC[lv]||'#999';
-    const mLabel={visual:'Visual',corrosion:'Corrosion',rl:'Remaining Life'}[currentMode];
-    html+=`<div class="t-row" style="margin-top:5px;padding-top:5px;border-top:1px solid #f0f0f0"><span class="t-dot" style="background:${c2}"></span><span style="font-weight:700;color:${c2}">${mLabel}: ${lv||'—'}</span></div>`;
-    if(currentMode==='corrosion')html+=`<div class="t-row"><span style="color:#888;width:100px">Corr. Rate:</span><b>${d.corrosion_rate} mm/yr</b></div><div class="t-row"><span style="color:#888;width:100px">Thickness:</span><b>${d.thickness} mm</b></div>`;
-    if(currentMode==='rl')html+=`<div class="t-row"><span style="color:#888;width:100px">Remaining Life:</span><b>${d.rl_value} thn</b></div>`;
+  if(isMulti){
+    // Show all tags as badges
+    html+=`<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px">`;
+    tags.forEach(t=>{ html+=`<span class="t-tag" style="margin:0">${t}</span>`; });
+    html+=`</div>`;
+  } else {
+    if(lt||tag) html+=`<span class="t-tag">${lt||tag}</span>`;
   }
+  if(type) html+=`<div class="t-row">${ticon} <span>${type}</span></div>`;
+  if(currentMode==='default'&&st) html+=`<div class="t-row"><span class="t-dot" style="background:#1565c0"></span><span style="font-weight:600;color:#1565c0">${st}</span></div>`;
+
+  // For multi-tag pipes: show worst level across all tags
+  if(currentMode!=='default'){
+    const LV_ORDER=['Severe','High','Moderate','Low'];
+    let worstLv=null, worstTag=null;
+    tags.forEach(t=>{
+      const d=COND[t]; if(!d)return;
+      const lv=getLv(t,currentMode);
+      if(!lv)return;
+      if(!worstLv||LV_ORDER.indexOf(lv)<LV_ORDER.indexOf(worstLv)){worstLv=lv;worstTag=t;}
+    });
+    if(worstLv){
+      const c2=getLvColor(worstLv, currentMode);
+      const mLabel={visual:'Visual',corrosion:'Corrosion',rl:'Remaining Life'}[currentMode];
+      const prefix=isMulti&&worstTag?`[${worstTag}] `:'';
+      html+=`<div class="t-row" style="margin-top:5px;padding-top:5px;border-top:1px solid #f0f0f0"><span class="t-dot" style="background:${c2}"></span><span style="font-weight:700;color:${c2}">${prefix}${mLabel}: ${worstLv}</span></div>`;
+      const d=COND[worstTag||tag];
+      if(d){
+        if(currentMode==='corrosion')html+=`<div class="t-row"><span style="color:#888;width:100px">Corr. Rate:</span><b>${d.corrosion_rate} mm/yr</b></div><div class="t-row"><span style="color:#888;width:100px">Thickness:</span><b>${d.thickness} mm</b></div>`;
+        if(currentMode==='rl')html+=`<div class="t-row"><span style="color:#888;width:100px">Remaining Life:</span><b>${d.rl_value} thn</b></div>`;
+      }
+    }
+  }
+
   tipEl.innerHTML=html;
-  tipEl.style.borderLeftColor=d&&currentMode!=='default'?(LC[getLv(tag,currentMode)]||'#1565c0'):'#1565c0';
+  // Border color based on worst level
+  if(currentMode!=='default'){
+    const LV_ORDER=['Severe','High','Moderate','Low'];
+    let worstLv=null;
+    tags.forEach(t=>{const lv=getLv(t,currentMode);if(!lv)return;if(!worstLv||LV_ORDER.indexOf(lv)<LV_ORDER.indexOf(worstLv))worstLv=lv;});
+    tipEl.style.borderLeftColor=getLvColor(worstLv,currentMode)||'#1565c0';
+  } else {
+    tipEl.style.borderLeftColor='#1565c0';
+  }
   tipEl.style.display='block'; tipOn=true; mvTip(e);
-  sbEl.textContent=(lt||tag)+(type?` — ${type}`:'')+(d&&currentMode!=='default'?` | ${currentMode}: ${getLv(tag,currentMode)||'?'}` : '');
+  sbEl.textContent=fullTag+(type?` — ${type}`:'');
 }
 function mvTip(e){
   if(!tipOn)return;
@@ -1589,31 +1941,284 @@ storeOrig();
 applyVB();
 refreshTypeDropdowns();
 
-// Load conditions from API (if deployed), fallback to built-in COND
+// Load tags + conditions from DB on startup
 (async () => {
-  const remote = await apiGet('/api/conditions');
-  if (remote && Object.keys(remote).length > 0) {
-    // Merge remote data into COND — remote takes priority
-    Object.assign(COND, remote);
-    console.log('✅ Loaded', Object.keys(remote).length, 'conditions from DB');
-  } else if (!API_URL) {
-    console.log('📁 Offline mode — using built-in COND data');
-  }
-  applyColors();
-  // Show connection status in statusbar
   const sb = document.getElementById('sb');
-  if (sb) {
-    if (API_URL) {
-      sb.textContent = remote ? '🟢 Connected to DB' : '🔴 DB connection failed';
+
+  if (API_URL) {
+    // ── Load tags from DB → apply to SVG ──────────────────────────────
+    const remoteTags = await apiGet('/api/tags');
+    if (remoteTags && Object.keys(remoteTags).length > 0) {
+      let tagUpdated = 0;
+      Object.values(remoteTags).forEach(function(row) {
+        var g = document.querySelector('#diagram-inner g[data-uid="' + row.uid + '"]');
+        if (!g) return;
+        var oldTag = g.getAttribute('data-tag') || '';
+        // Apply tag
+        g.setAttribute('data-tag', row.tag);
+        // Apply type to data-tip
+        var tip = g.getAttribute('data-tip') || '';
+        if (row.tag)  tip = tip.replace(/^Tag: .*/m,  'Tag: '  + row.tag)  || ('Tag: ' + row.tag);
+        if (row.type) tip = tip.replace(/^Type: .*/m, 'Type: ' + row.type) || ('Type: ' + row.type + '\n' + tip);
+        g.setAttribute('data-tip', tip);
+        // Update SVG text label
+        g.querySelectorAll('foreignObject div').forEach(function(d) {
+          if (d.children.length === 0 && d.textContent.trim() === oldTag) d.textContent = row.tag;
+        });
+        // Update BEST_TIPS + EQUIP_LIST
+        if (BEST_TIPS[oldTag]) { BEST_TIPS[row.tag] = BEST_TIPS[oldTag]; if (oldTag !== row.tag) delete BEST_TIPS[oldTag]; }
+        var eqIdx = EQUIP_LIST.findIndex(function(e){ return e.tag === oldTag; });
+        if (eqIdx >= 0) { EQUIP_LIST[eqIdx].tag = row.tag; if (row.type) EQUIP_LIST[eqIdx].type = row.type; }
+        // Update COND key
+        if (COND[oldTag] && oldTag !== row.tag) { COND[row.tag] = COND[oldTag]; COND[row.tag].tag = row.tag; delete COND[oldTag]; }
+        tagUpdated++;
+      });
+      console.log('✅ Applied', tagUpdated, 'tags from DB');
+      refreshTypeDropdowns();
+    }
+
+    // ── Load conditions from DB ────────────────────────────────────────
+    const remoteCond = await apiGet('/api/conditions');
+    if (remoteCond && Object.keys(remoteCond).length > 0) {
+      Object.assign(COND, remoteCond);
+      console.log('✅ Loaded', Object.keys(remoteCond).length, 'conditions from DB');
+    }
+
+    // ── Load COLOR_SCALES from DB ──────────────────────────────────────
+    var remoteScales = await apiGet('/api/scales');
+    if (remoteScales) {
+      Object.assign(COLOR_SCALES, remoteScales);
+      console.log('✅ Color scales loaded from DB');
+    }
+
+    if (sb) {
+      sb.textContent = (remoteTags || remoteCond) ? '🟢 Connected to DB' : '🔴 DB connection failed';
       setTimeout(() => { sb.textContent = ''; }, 3000);
     }
+  } else {
+    console.log('📁 Offline mode — using built-in data');
   }
+
+  applyColors();
 })();
 
 // ══════════════════════════════════════════════════════
 //  DOUBLE-CLICK EDIT TAG
 // ══════════════════════════════════════════════════════
 let editTarget = null; // {gElements: [], oldTag: string, oldType: string}
+
+function isPipeType(type) {
+  return type === 'Pipe/Line No.' || type === 'Process Line' || type === 'Process Stream';
+}
+
+// ── Edit modal tab switching ───────────────────────────────────────────────
+var curEditTab = 'tag';
+function switchEditTab(tab, btn) {
+  curEditTab = tab;
+  document.querySelectorAll('.etab').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.etab-pane').forEach(function(p){ p.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  else { var b2 = document.getElementById('etab-' + tab); if(b2) b2.classList.add('active'); }
+  var pane = document.getElementById('epane-' + tab);
+  if (pane) pane.classList.add('active');
+  if (tab === 'settings') { showScaleEditor('visual', document.querySelector('.scale-tab')); }
+  if (tab === 'rl') updateRLThresholdDisplay();
+}
+
+// ── Visual selector ────────────────────────────────────────────────────────
+var selVisualVal = 0;
+function renderVisualButtons(selectedVal) {
+  var scale  = COLOR_SCALES.visual;
+  var container = document.querySelector('.vis-btns');
+  if (!container) return;
+  container.innerHTML = '';
+  scale.forEach(function(entry, idx) {
+    var n   = idx + 1;
+    var btn = document.createElement('button');
+    btn.className = 'vis-btn' + (n === selectedVal ? ' sel-custom' : '');
+    btn.id = 'vbtn-' + n;
+    btn.innerHTML = n + '<br><small>' + entry.label + '</small>';
+    btn.style.borderColor = n === selectedVal ? entry.color : '#eee';
+    btn.style.background  = n === selectedVal ? entry.color + '22' : '#fafafa';
+    btn.style.color       = n === selectedVal ? entry.color : '#555';
+    btn.onclick = function(){ selectVisual(n); };
+    container.appendChild(btn);
+  });
+}
+
+function selectVisual(n) {
+  selVisualVal = n;
+  var scale  = COLOR_SCALES.visual;
+  var entry  = scale[n - 1] || {};
+  var lv     = entry.label || '';
+  var color  = entry.color || '#999';
+  // Re-render all buttons
+  var scale2 = COLOR_SCALES.visual;
+  scale2.forEach(function(e, idx) {
+    var i   = idx + 1;
+    var btn = document.getElementById('vbtn-' + i);
+    if (!btn) return;
+    var sel = i === n;
+    btn.style.borderColor = sel ? e.color : '#eee';
+    btn.style.background  = sel ? e.color + '22' : '#fafafa';
+    btn.style.color       = sel ? e.color : '#555';
+  });
+  var badge = document.getElementById('edit-visual-badge');
+  if (badge) {
+    badge.style.background = color + '22';
+    badge.style.color      = color;
+    badge.className        = 'lv-badge';
+    badge.textContent      = lv || '—';
+  }
+}
+
+// ── Corrosion auto-level ───────────────────────────────────────────────────
+function updateCorrLevel() {
+  var rate = parseFloat(document.getElementById('edit-corr-rate').value)||0;
+  var thk  = parseFloat(document.getElementById('edit-thickness').value)||0;
+  var lvR  = getLvFromCorrRate(rate);
+  var lvT  = getLvFromThickness(thk);
+  var lvC  = getLvFromCorrosion(rate, thk);
+  var rb = document.getElementById('edit-corr-rate-badge');
+  var tb = document.getElementById('edit-thick-badge');
+  var cb = document.getElementById('edit-corr-badge');
+  if (rb) { rb.className='lv-badge '+(rate?lvR:'empty'); rb.textContent=rate?lvR:'—'; }
+  if (tb) { tb.className='lv-badge '+(thk?lvT:'empty');  tb.textContent=thk?lvT:'—';  }
+  if (cb) { cb.className='lv-badge '+(lvC||'empty');     cb.textContent=lvC||'—';     }
+}
+
+// ── RL auto-level ──────────────────────────────────────────────────────────
+function updateRLLevel() {
+  var val  = parseFloat(document.getElementById('edit-rl-value').value)||0;
+  var lv   = getLvFromRL(val);
+  var badge = document.getElementById('edit-rl-badge');
+  if (badge) { badge.className='lv-badge '+(val?lv:'empty'); badge.textContent=val?lv:'—'; }
+}
+function updateRLThresholdDisplay() {
+  var scale = COLOR_SCALES.rl || [];
+  var s = document.getElementById('thr-rl-severe');
+  var h = document.getElementById('thr-rl-high');
+  var m = document.getElementById('thr-rl-mod');
+  // Show threshold values from COLOR_SCALES.rl (sorted by value)
+  var sorted = scale.slice().sort(function(a,b){return a.value - b.value;});
+  if(s) s.textContent = sorted[0] ? sorted[0].value : '—';
+  if(h) h.textContent = sorted[1] ? sorted[1].value : '—';
+  if(m) m.textContent = sorted[2] ? sorted[2].value : '—';
+}
+
+// ── Threshold settings ─────────────────────────────────────────────────────
+function loadThresholdInputs() { /* replaced by showScaleEditor */ }
+// ── Dynamic Scale Editor ──────────────────────────────────────────────────
+var curScaleKey = 'visual';
+var SCALE_META = {
+  visual:    { title: '👁 Visual — nilai 1,2,3,... mapping ke level warna', op: 'index', hint: 'Nilai (urutan)' },
+  corr_rate: { title: '📈 Corrosion Rate (mm/yr) — ≥ nilai → level', op: '>=', hint: 'Min mm/yr' },
+  thickness: { title: '📏 Thickness (mm) — ≤ nilai → level', op: '<=', hint: 'Max mm' },
+  rl:        { title: '⏳ Remaining Life (thn) — ≤ nilai → level', op: '<=', hint: 'Max thn' }
+};
+
+function showScaleEditor(key, btn) {
+  curScaleKey = key;
+  document.querySelectorAll('.scale-tab').forEach(function(b){ b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  var meta = SCALE_META[key];
+  document.getElementById('scale-editor-title').textContent = meta ? meta.title : '';
+  renderScaleRows();
+}
+
+function renderScaleRowHTML(entry, idx, meta, opLabel) {
+  var colorInput = '<input type="color" value="' + entry.color + '" oninput="updateScaleEntry(' + idx + ',\"color\",this.value)">';
+  var labelInput = '<input type="text" value="' + entry.label.replace(/"/g,'&quot;') + '" placeholder="Label" oninput="updateScaleEntry(' + idx + ',\"label\",this.value)" style="flex:1">';
+  var opSpan    = '<span class="op-label">' + opLabel + '</span>';
+  var valInput  = meta.op !== 'index'
+    ? '<input type="number" value="' + entry.value + '" step="0.01" placeholder="' + meta.hint + '" oninput="updateScaleEntry(' + idx + ',\"value\",parseFloat(this.value)||0)" style="width:65px">'
+    : '';
+  var delBtn    = '<button onclick="removeScaleRow(' + idx + ')" title="Hapus">✕</button>';
+  return colorInput + labelInput + opSpan + valInput + delBtn;
+}
+
+function renderScaleRows() {
+  var scale = COLOR_SCALES[curScaleKey] || [];
+  var meta  = SCALE_META[curScaleKey];
+  var container = document.getElementById('scale-editor-rows');
+  container.innerHTML = '';
+  scale.forEach(function(entry, idx) {
+    var row = document.createElement('div');
+    row.className = 'scale-row';
+    var opLabel = meta.op === 'index' ? (idx+1) : meta.op;
+    row.innerHTML = renderScaleRowHTML(entry, idx, meta, opLabel);
+    container.appendChild(row);
+  });
+}
+
+function updateScaleEntry(idx, field, val) {
+  if (COLOR_SCALES[curScaleKey] && COLOR_SCALES[curScaleKey][idx]) {
+    COLOR_SCALES[curScaleKey][idx][field] = val;
+  }
+}
+
+function addScaleRow() {
+  var scale = COLOR_SCALES[curScaleKey];
+  var meta  = SCALE_META[curScaleKey];
+  var newEntry = { label: 'Level ' + (scale.length+1), color: '#9e9e9e', op: meta.op };
+  if (meta.op !== 'index') newEntry.value = 0;
+  else newEntry.value = scale.length + 1;
+  scale.push(newEntry);
+  renderScaleRows();
+}
+
+function removeScaleRow(idx) {
+  COLOR_SCALES[curScaleKey].splice(idx, 1);
+  renderScaleRows();
+}
+
+function applyScalesAndRefresh() {
+  applyColors();
+}
+
+async function saveScalesToDB() {
+  if (!API_URL) { alert('Hanya tersedia saat online'); return; }
+  var result = await apiPost('/api/scales', { scales: COLOR_SCALES });
+  alert(result ? '✅ Color scales tersimpan ke DB!' : '❌ Gagal menyimpan');
+}
+
+function bakeScalesToHTML() {
+  // Trigger download with current COLOR_SCALES baked in
+  document.getElementById('btn-download').click();
+}
+
+// Legacy compat
+function saveThresholds() { /* replaced by scale editor */ }
+
+function onEditTypeChange(type) {
+  var isPipe = isPipeType(type);
+  document.getElementById('edit-row-single').style.display = isPipe ? 'none' : '';
+  document.getElementById('edit-row-multi').style.display  = isPipe ? '' : 'none';
+  if (isPipe) {
+    var list = document.getElementById('edit-tags-list');
+    // Pre-fill with current single tag value if list is empty
+    if (!list.children.length) {
+      var curTag = document.getElementById('edit-tag').value.trim();
+      addPipeTag(curTag || '');
+    }
+  }
+}
+
+function addPipeTag(val) {
+  var list = document.getElementById('edit-tags-list');
+  var row  = document.createElement('div');
+  row.className = 'pipe-tag-row';
+  row.innerHTML = '<input type="text" placeholder="Nomor pipa..." value="' + (val||'') + '">' +
+                  '<button type="button" onclick="this.parentNode.remove()">✕</button>';
+  list.appendChild(row);
+  row.querySelector('input').focus();
+}
+
+function getPipeTags() {
+  return Array.from(document.querySelectorAll('#edit-tags-list .pipe-tag-row input'))
+    .map(function(i){ return i.value.trim(); })
+    .filter(Boolean);
+}
 
 function openEditUID(uid) {
   var g = document.querySelector('#diagram-inner g[data-uid="' + uid + '"]');
@@ -1624,9 +2229,22 @@ function openEditUID(uid) {
   tip.split('\n').forEach(function(l) {
     if (l.startsWith('Type: ')) type = l.slice(6);
   });
+
   editTarget = { uid: uid, g: g, oldTag: tag };
+
+  // ── Populate Tag tab ──────────────────────────────────────────────────
   document.getElementById('edit-orig').value = tag;
-  document.getElementById('edit-tag').value  = tag;
+  var isPipe = isPipeType(type);
+  document.getElementById('edit-row-single').style.display = isPipe ? 'none' : '';
+  document.getElementById('edit-row-multi').style.display  = isPipe ? '' : 'none';
+  if (isPipe) {
+    var list = document.getElementById('edit-tags-list');
+    list.innerHTML = '';
+    tag.split(' | ').forEach(function(t){ if(t.trim()) addPipeTag(t.trim()); });
+    if (!list.children.length) addPipeTag('');
+  } else {
+    document.getElementById('edit-tag').value = tag;
+  }
   var sel = document.getElementById('edit-type');
   var matched = false;
   for (var i = 0; i < sel.options.length; i++) {
@@ -1634,10 +2252,48 @@ function openEditUID(uid) {
   }
   if (!matched) sel.selectedIndex = 0;
   document.getElementById('edit-type-custom').value = matched ? '' : type;
+
+  // ── Populate condition tabs from COND (use first tag for pipes) ───────
+  var firstTag = tag.split(' | ')[0].trim();
+  var d = COND[firstTag] || COND[tag] || {};
+
+  // Visual tab
+  var vn = parseInt(d.visual_value) || 0;
+  if (!vn) {
+    var lvToNum = {'Low':1,'Moderate':2,'High':3,'Severe':4};
+    vn = lvToNum[d.visual_level] || 0;
+  }
+  selVisualVal = vn;
+  renderVisualButtons(vn);
+  var vb = document.getElementById('edit-visual-badge');
+  var vLvMap = {1:'Low',2:'Moderate',3:'High',4:'Severe'};
+  var vLv = vLvMap[vn]||'';
+  if(vb){ vb.className='lv-badge '+(vLv||'empty'); vb.textContent=vLv||'—'; }
+  var vNotes = document.getElementById('edit-visual-notes');
+  if(vNotes) vNotes.value = d.visual_notes || '';
+
+  // Corrosion tab
+  var crEl = document.getElementById('edit-corr-rate');
+  var thEl = document.getElementById('edit-thickness');
+  if(crEl) crEl.value = d.corrosion_rate || '';
+  if(thEl) thEl.value = d.thickness || '';
+  updateCorrLevel();
+
+  // RL tab
+  var rlEl = document.getElementById('edit-rl-value');
+  if(rlEl) rlEl.value = d.rl_value || '';
+  updateRLLevel();
+  updateRLThresholdDisplay();
+
+  // ── Open correct tab based on currentMode ─────────────────────────────
+  var tabMap = { visual:'visual', corrosion:'corrosion', rl:'rl', default:'tag' };
+  var openTab = tabMap[currentMode] || 'tag';
+  switchEditTab(openTab, document.getElementById('etab-' + openTab));
+
   document.getElementById('edit-overlay').classList.add('open');
   setTimeout(function() {
-    document.getElementById('edit-tag').focus();
-    document.getElementById('edit-tag').select();
+    var firstInput = document.querySelector('#epane-tag input:not([readonly])') || document.getElementById('edit-tag');
+    if (openTab === 'tag' && firstInput) { firstInput.focus(); firstInput.select(); }
   }, 80);
 }
 
@@ -1648,10 +2304,27 @@ function closeEdit() {
 
 function saveEdit() {
   if (!editTarget) return;
-  var newTag  = document.getElementById('edit-tag').value.trim();
   var newType = document.getElementById('edit-type-custom').value.trim()
                 || document.getElementById('edit-type').value;
-  if (!newTag) { alert('Tag tidak boleh kosong'); return; }
+
+  // Multi-tag for pipes
+  var isPipe = isPipeType(newType);
+  var newTag;
+  if (isPipe) {
+    var multiVisible = document.getElementById('edit-row-multi').style.display !== 'none';
+    if (multiVisible) {
+      var pipeTags = getPipeTags();
+      if (!pipeTags.length) { alert('Minimal satu tag harus diisi'); return; }
+      newTag = pipeTags.join(' | ');
+    } else {
+      // UI not switched yet — use single tag field
+      newTag = document.getElementById('edit-tag').value.trim();
+      if (!newTag) { alert('Tag tidak boleh kosong'); return; }
+    }
+  } else {
+    newTag = document.getElementById('edit-tag').value.trim();
+    if (!newTag) { alert('Tag tidak boleh kosong'); return; }
+  }
 
   var g      = editTarget.g;
   var oldTag = editTarget.oldTag;
@@ -1701,27 +2374,38 @@ function saveEdit() {
     if (dupIdx >= 0) EQUIP_LIST.splice(dupIdx, 1);
   }
 
-  // Update COND — rename key if tag changed, update type, insert if missing
-  if (COND[oldTag]) {
-    var condEntry = COND[oldTag];
-    condEntry.tag  = newTag;
-    if (newType) condEntry.type = newType;
-    if (oldTag !== newTag) { COND[newTag] = condEntry; delete COND[oldTag]; }
-  } else {
-    // Insert blank COND entry so tag appears in Visual/Corrosion/RL tabs
-    COND[newTag] = {
-      tag: newTag, type: newType || '',
-      visual_level: '', visual_notes: '',
-      corrosion_level: '', corrosion_rate: 0, thickness: 0,
-      rl_value: 0, rl_level: ''
-    };
-  }
+  // ── Read condition values from modal tabs ──────────────────────────────
+  var lvMap = {1:'Low',2:'Moderate',3:'High',4:'Severe'};
+  var vLv   = lvMap[selVisualVal] || '';
+  var vNotes = (document.getElementById('edit-visual-notes')||{}).value || '';
+  var corrRate  = parseFloat((document.getElementById('edit-corr-rate')||{}).value)||0;
+  var thickness = parseFloat((document.getElementById('edit-thickness')||{}).value)||0;
+  var corrLv  = getLvFromCorrosion(corrRate, thickness);
+  var rlVal   = parseFloat((document.getElementById('edit-rl-value')||{}).value)||0;
+  var rlLv    = getLvFromRL(rlVal);
+
+  // ── Update COND for all tags (handles pipe multi-tag) ─────────────────
+  var allNewTags = newTag.split(' | ').map(function(t){return t.trim();}).filter(Boolean);
+  allNewTags.forEach(function(t) {
+    if (COND[oldTag] && oldTag !== t) { COND[t] = COND[oldTag]; delete COND[oldTag]; }
+    if (!COND[t]) COND[t] = { tag:t, type:newType||'', visual_level:'', visual_notes:'', corrosion_level:'', corrosion_rate:0, thickness:0, rl_value:0, rl_level:'' };
+    var e = COND[t];
+    e.tag = t;
+    if (newType) e.type = newType;
+    if (selVisualVal) { e.visual_level = vLv; e.visual_value = selVisualVal; }
+    e.visual_notes = vNotes;
+    if (corrRate || thickness) { e.corrosion_rate = corrRate; e.thickness = thickness; e.corrosion_level = corrLv; }
+    if (rlVal) { e.rl_value = rlVal; e.rl_level = rlLv; }
+  });
 
   applyColors();
   refreshTypeDropdowns();
-  // Sync renamed tag condition to API
-  if (API_URL && editTarget && COND[newTag]) {
-    apiPost('/api/conditions', COND[newTag]);
+
+  // ── Sync to DB ────────────────────────────────────────────────────────
+  var uid2 = editTarget.g.getAttribute('data-uid');
+  if (API_URL && uid2) apiPost('/api/tags', { uid: uid2, tag: newTag, type: newType });
+  if (API_URL) {
+    allNewTags.forEach(function(t){ if(COND[t]) apiPost('/api/conditions', COND[t]); });
   }
   closeEdit();
 }
@@ -1831,6 +2515,10 @@ document.getElementById('btn-download').addEventListener('click', async function
       txt = txt.replace(
         /const EQUIP_LIST\s*=\s*\[[\s\S]*?\];/,
         'const EQUIP_LIST = ' + JSON.stringify(EQUIP_LIST) + ';'
+      );
+      txt = txt.replace(
+        /let COLOR_SCALES\s*=\s*\{[\s\S]*?\};/,
+        'let COLOR_SCALES = ' + JSON.stringify(COLOR_SCALES) + ';'
       );
       txt = txt.replace(
         /let COND\s*=\s*\{[\s\S]*?\};/,
