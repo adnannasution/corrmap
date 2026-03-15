@@ -1054,6 +1054,7 @@ Tag: 186" data-tag="186" data-uid="G0498"><rect x="705.5" y="-688" width="48" he
 const API_URL = (typeof window !== 'undefined' && window.location.protocol !== 'file:')
   ? window.location.origin
   : null;
+let initDone = false; // flag: DB init load complete
 
 // ── COLOR_SCALES: fully dynamic color config ──────────────────────────────
 // Each scale = array of levels sorted best→worst (last = worst/most severe)
@@ -1140,8 +1141,15 @@ function getColorForTag(tag, mode) {
 // Push ALL current tags from SVG to DB in one bulk call
 async function pushAllTags() {
   if (!API_URL) { alert('Fitur ini hanya tersedia saat online di server.'); return; }
+  // Wait for init to complete before reading DOM tags
+  if (!initDone) {
+    alert('Halaman masih memuat data dari DB, tunggu sebentar lalu coba lagi.');
+    return;
+  }
   const btn = document.getElementById('btn-push-tags');
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Menyimpan...'; }
+
+  // Read tags from DOM (already has latest from DB + any user edits)
   const all = document.querySelectorAll('#diagram-inner g[data-uid][data-tag]');
   const tags = [];
   all.forEach(function(g) {
@@ -1152,6 +1160,7 @@ async function pushAllTags() {
     tip.split('\n').forEach(function(l){ if(l.startsWith('Type: ')) type = l.slice(6); });
     if (uid && tag) tags.push({ uid, tag, type });
   });
+
   try {
     const result = await apiPost('/api/tags/bulk', { tags });
     alert('✅ ' + (result ? result.saved : tags.length) + ' tag berhasil disimpan ke database!');
@@ -1955,11 +1964,25 @@ refreshTypeDropdowns();
         var oldTag = g.getAttribute('data-tag') || '';
         // Apply tag
         g.setAttribute('data-tag', row.tag);
-        // Apply type to data-tip
+        // Rebuild data-tip with new tag + type
         var tip = g.getAttribute('data-tip') || '';
-        if (row.tag)  tip = tip.replace(/^Tag: .*/m,  'Tag: '  + row.tag)  || ('Tag: ' + row.tag);
-        if (row.type) tip = tip.replace(/^Type: .*/m, 'Type: ' + row.type) || ('Type: ' + row.type + '\n' + tip);
+        // Update Tag line
+        if (tip.match(/^Tag: /m)) {
+          tip = tip.replace(/^Tag: .*/m, 'Tag: ' + row.tag);
+        } else {
+          tip = tip + '\nTag: ' + row.tag;
+        }
+        // Update Type line
+        if (row.type) {
+          if (tip.match(/^Type: /m)) {
+            tip = tip.replace(/^Type: .*/m, 'Type: ' + row.type);
+          } else {
+            tip = 'Type: ' + row.type + '\n' + tip;
+          }
+        }
         g.setAttribute('data-tip', tip);
+        // Also update BEST_TIPS with new tip
+        BEST_TIPS[row.tag] = tip;
         // Update SVG text label
         g.querySelectorAll('foreignObject div').forEach(function(d) {
           if (d.children.length === 0 && d.textContent.trim() === oldTag) d.textContent = row.tag;
@@ -1999,6 +2022,7 @@ refreshTypeDropdowns();
   }
 
   applyColors();
+  initDone = true;
 })();
 
 // ══════════════════════════════════════════════════════
