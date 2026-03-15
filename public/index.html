@@ -1535,7 +1535,8 @@ function showTip(e,g){
 
   // For single tag use existing logic; for multi, use first tag for type/status lookup
   const tag=tags[0]||'';
-  const raw=BEST_TIPS[tag]||g.getAttribute('data-tip')||'';
+  // Always read data-tip from DOM (updated by init), fallback to BEST_TIPS
+  const raw=g.getAttribute('data-tip')||BEST_TIPS[tag]||'';
   const lines=raw.split('\n'); let lt='',type='',st='';
   lines.forEach(l=>{if(l.startsWith('Tag: '))lt=l.slice(5);else if(l.startsWith('Type: '))type=l.slice(6);else if(l.startsWith('Status: '))st=l.slice(8);});
   const ticon=TI[type]||'📦';
