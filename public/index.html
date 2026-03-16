@@ -1529,7 +1529,7 @@ function showTip(e,g){
 
   // For single tag use existing logic; for multi, use first tag for type/status lookup
   const tag=tags[0]||'';
-  const raw=BEST_TIPS[tag]||g.getAttribute('data-tip')||'';
+  const raw=g.getAttribute('data-tip')||BEST_TIPS[tag]||''; // DOM first (already updated by init), BEST_TIPS as fallback
   const lines=raw.split('\n'); let lt='',type='',st='';
   lines.forEach(l=>{if(l.startsWith('Tag: '))lt=l.slice(5);else if(l.startsWith('Type: '))type=l.slice(6);else if(l.startsWith('Status: '))st=l.slice(8);});
   const ticon=TI[type]||'📦';
@@ -1952,6 +1952,7 @@ refreshTypeDropdowns();
     const remoteTags = await apiGet('/api/tags');
     if (remoteTags && Object.keys(remoteTags).length > 0) {
       let tagUpdated = 0;
+      var tagRenames = {}; // oldTag → newTag map for second-pass label update
       Object.values(remoteTags).forEach(function(row) {
         var g = document.querySelector('#diagram-inner g[data-uid="' + row.uid + '"]');
         if (!g) return;
@@ -1977,17 +1978,12 @@ refreshTypeDropdowns();
         g.setAttribute('data-tip', tip);
         // Also update BEST_TIPS with new tip
         BEST_TIPS[row.tag] = tip;
-        // Update SVG text label — inside g (equipment) OR next sibling (pipes/lines)
+        // Update SVG text label INSIDE g (equipment/vessel/HE)
         g.querySelectorAll('foreignObject div').forEach(function(d) {
           if (d.children.length === 0 && d.textContent.trim() === oldTag) d.textContent = row.tag;
         });
-        // Pipe labels live in the NEXT SIBLING g (no data-tag/data-uid)
-        var nextSib = g.nextElementSibling;
-        if (nextSib && !nextSib.hasAttribute('data-tag') && !nextSib.hasAttribute('data-uid')) {
-          nextSib.querySelectorAll('foreignObject div').forEach(function(d) {
-            if (d.children.length === 0 && d.textContent.trim() === oldTag) d.textContent = row.tag;
-          });
-        }
+        // Track rename for second-pass label update (pipes/lines label is after LAST segment)
+        if (oldTag !== row.tag) tagRenames[oldTag] = row.tag;
         // Update BEST_TIPS + EQUIP_LIST
         if (BEST_TIPS[oldTag]) { BEST_TIPS[row.tag] = BEST_TIPS[oldTag]; if (oldTag !== row.tag) delete BEST_TIPS[oldTag]; }
         var eqIdx = EQUIP_LIST.findIndex(function(e){ return e.tag === oldTag; });
@@ -1996,6 +1992,21 @@ refreshTypeDropdowns();
         if (COND[oldTag] && oldTag !== row.tag) { COND[row.tag] = COND[oldTag]; COND[row.tag].tag = row.tag; delete COND[oldTag]; }
         tagUpdated++;
       });
+
+      // ── Second pass: update ALL label siblings for renamed tags ──────
+      // Label <g> siblings have no data-tag/data-uid and contain foreignObject
+      // They appear after the LAST segment of each pipe/line group
+      if (Object.keys(tagRenames).length > 0) {
+        document.querySelectorAll('#diagram-inner g:not([data-tag]):not([data-uid])').forEach(function(labelG) {
+          labelG.querySelectorAll('foreignObject div').forEach(function(d) {
+            if (d.children.length === 0) {
+              var txt = d.textContent.trim();
+              if (tagRenames[txt]) d.textContent = tagRenames[txt];
+            }
+          });
+        });
+      }
+
       console.log('✅ Applied', tagUpdated, 'tags from DB');
       refreshTypeDropdowns();
     }
