@@ -1977,10 +1977,17 @@ refreshTypeDropdowns();
         g.setAttribute('data-tip', tip);
         // Also update BEST_TIPS with new tip
         BEST_TIPS[row.tag] = tip;
-        // Update SVG text label
+        // Update SVG text label — inside g (equipment) OR next sibling (pipes/lines)
         g.querySelectorAll('foreignObject div').forEach(function(d) {
           if (d.children.length === 0 && d.textContent.trim() === oldTag) d.textContent = row.tag;
         });
+        // Pipe labels live in the NEXT SIBLING g (no data-tag/data-uid)
+        var nextSib = g.nextElementSibling;
+        if (nextSib && !nextSib.hasAttribute('data-tag') && !nextSib.hasAttribute('data-uid')) {
+          nextSib.querySelectorAll('foreignObject div').forEach(function(d) {
+            if (d.children.length === 0 && d.textContent.trim() === oldTag) d.textContent = row.tag;
+          });
+        }
         // Update BEST_TIPS + EQUIP_LIST
         if (BEST_TIPS[oldTag]) { BEST_TIPS[row.tag] = BEST_TIPS[oldTag]; if (oldTag !== row.tag) delete BEST_TIPS[oldTag]; }
         var eqIdx = EQUIP_LIST.findIndex(function(e){ return e.tag === oldTag; });
