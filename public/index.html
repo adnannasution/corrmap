@@ -209,7 +209,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f0f2f5;color:#222;height
     <button class="ctab" data-mode="rl" onclick="setMode('rl',this)">⏳ Remaining Life</button>
   </div>
   <span style="margin-left:auto;font-size:10px;color:#bbb;padding-right:4px">Scroll=zoom • Drag=geser • Dbl-click=edit tag</span>
-  <button class="btn" id="btn-push-tags" style="margin-left:6px" title="Simpan semua tag ke database" onclick="pushAllTags()">☁ Push Tags ke DB</button>
+
   <button class="btn success" id="btn-download" style="margin-left:6px" title="Download HTML dengan tag yang sudah diedit">⬇ Download HTML</button>
 </div>
 
@@ -1015,7 +1015,7 @@ Tag: 186" data-tag="186" data-uid="G0498"><rect x="705.5" y="-688" width="48" he
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
           <span style="font-size:11px;font-weight:700;color:#555">⚙ Custom Color Scales</span>
           <div style="display:flex;gap:4px">
-            <button onclick="saveScalesToDB()" style="font-size:10px;padding:3px 8px;background:#1565c0;color:#fff;border:none;border-radius:4px;cursor:pointer">☁ Simpan ke DB</button>
+            
             <button onclick="bakeScalesToHTML()" style="font-size:10px;padding:3px 8px;background:#2e7d32;color:#fff;border:none;border-radius:4px;cursor:pointer">⬇ Bake ke HTML</button>
           </div>
         </div>
@@ -1140,16 +1140,7 @@ function getColorForTag(tag, mode) {
 
 // Push ALL current tags from SVG to DB in one bulk call
 async function pushAllTags() {
-  if (!API_URL) { alert('Fitur ini hanya tersedia saat online di server.'); return; }
-  // Wait for init to complete before reading DOM tags
-  if (!initDone) {
-    alert('Halaman masih memuat data dari DB, tunggu sebentar lalu coba lagi.');
-    return;
-  }
-  const btn = document.getElementById('btn-push-tags');
-  if (btn) { btn.disabled = true; btn.textContent = '⏳ Menyimpan...'; }
-
-  // Read tags from DOM (already has latest from DB + any user edits)
+  if (!API_URL || !initDone) return;
   const all = document.querySelectorAll('#diagram-inner g[data-uid][data-tag]');
   const tags = [];
   all.forEach(function(g) {
@@ -1160,14 +1151,7 @@ async function pushAllTags() {
     tip.split('\n').forEach(function(l){ if(l.startsWith('Type: ')) type = l.slice(6); });
     if (uid && tag) tags.push({ uid, tag, type });
   });
-
-  try {
-    const result = await apiPost('/api/tags/bulk', { tags });
-    alert('✅ ' + (result ? result.saved : tags.length) + ' tag berhasil disimpan ke database!');
-  } catch(e) {
-    alert('❌ Gagal menyimpan: ' + e);
-  }
-  if (btn) { btn.disabled = false; btn.textContent = '☁ Push Tags ke DB'; }
+  try { await apiPost('/api/tags/bulk', { tags }); } catch(e) { console.warn('pushAllTags failed:', e); }
 }
 
 async function apiGet(path) {
@@ -1425,9 +1409,14 @@ function storeOrig(){
   // Key by element reference so tag renames don't break color lookup
   document.querySelectorAll('#diagram-inner g[data-tag]').forEach(g=>{
     const saved=[];
-    g.querySelectorAll('path,rect,ellipse,circle').forEach(s=>saved.push({
-      el:s, fill:s.getAttribute('fill')
-    }));
+    g.querySelectorAll('path,rect,ellipse,circle').forEach(s=>{
+      var fill   = s.getAttribute('fill');
+      var stroke = s.getAttribute('stroke');
+      var vis    = s.getAttribute('visibility');
+      // isLine: fill=none means color is in stroke (pipes/lines)
+      var isLine = (!fill || fill==='none') && stroke && stroke!=='white' && stroke!=='none' && vis!=='hidden';
+      saved.push({ el:s, fill:fill, stroke:stroke, isLine:isLine });
+    });
     origColors.set(g, saved);
   });
 }
@@ -1466,13 +1455,19 @@ function applyColors(){
     all.forEach(g=>{
       const s=origColors.get(g);
       s&&s.forEach(i=>{
-        // Default mode: restore original fills (white for shapes, none for lines)
-        i.el.setAttribute('fill', i.fill||'none');
+        if(i.isLine){
+          // Default: black lines (original PFD engineering drawing style)
+          i.el.setAttribute('stroke', '#000000');
+        } else {
+          // Default: restore original fill (white for shapes, none for hitbox lines)
+          i.el.setAttribute('fill', i.fill||'none');
+        }
       });
     });
     return;
   }
-  // Build color map: tag → fill color
+
+  // Build color map: tag → condition color
   var tagColor = {};
   Object.values(COND).forEach(function(d) {
     var allTags = (d.tag||'').split(' | ').map(function(t){return t.trim();}).filter(Boolean);
@@ -1488,26 +1483,25 @@ function applyColors(){
     var saved   = origColors.get(g);
     if (!saved) return;
 
-    // For multi-tag: pick worst color (highest index in scale)
+    // For multi-tag: pick worst color
     var worstColor = null;
-    var scaleLabels = COLOR_SCALES[currentMode === 'rl' ? 'rl' : currentMode === 'corrosion' ? 'corr_rate' : 'visual'].map(function(s){return s.label;});
+    var scale = COLOR_SCALES[currentMode==='rl'?'rl': currentMode==='corrosion'?'corr_rate':'visual'];
     var worstIdx = -1;
     tags.forEach(function(t) {
-      var col = tagColor[t];
-      if (!col) return;
-      // find which scale entry this color belongs to
-      var scale = COLOR_SCALES[currentMode === 'rl' ? 'rl' : currentMode === 'corrosion' ? 'corr_rate' : 'visual'];
+      var col = tagColor[t]; if (!col) return;
       var idx = scale.findIndex ? scale.findIndex(function(s){return s.color===col;}) :
         (function(){ for(var i=0;i<scale.length;i++){if(scale[i].color===col)return i;} return -1; })();
       if (idx > worstIdx) { worstIdx = idx; worstColor = col; }
     });
 
     saved.forEach(function(s) {
-      if (!s.fill || s.fill === 'none') return;
-      if (worstColor) {
-        s.el.setAttribute('fill', worstColor);
+      if (s.isLine) {
+        // Line/pipe: apply color to stroke
+        s.el.setAttribute('stroke', worstColor || s.stroke);
       } else {
-        s.el.setAttribute('fill', '#d0d0d0'); // no data
+        // Shape: apply color to fill (skip fill=none elements like hitbox lines)
+        if (!s.fill || s.fill === 'none') return;
+        s.el.setAttribute('fill', worstColor || '#d0d0d0');
       }
     });
   });
@@ -1535,8 +1529,7 @@ function showTip(e,g){
 
   // For single tag use existing logic; for multi, use first tag for type/status lookup
   const tag=tags[0]||'';
-  // Always read data-tip from DOM (updated by init), fallback to BEST_TIPS
-  const raw=g.getAttribute('data-tip')||BEST_TIPS[tag]||'';
+  const raw=BEST_TIPS[tag]||g.getAttribute('data-tip')||'';
   const lines=raw.split('\n'); let lt='',type='',st='';
   lines.forEach(l=>{if(l.startsWith('Tag: '))lt=l.slice(5);else if(l.startsWith('Type: '))type=l.slice(6);else if(l.startsWith('Status: '))st=l.slice(8);});
   const ticon=TI[type]||'📦';
@@ -2024,6 +2017,8 @@ refreshTypeDropdowns();
 
   applyColors();
   initDone = true;
+  // Auto-push all tags to DB once after init (ensures DB is always in sync)
+  pushAllTags();
 })();
 
 // ══════════════════════════════════════════════════════
@@ -2198,16 +2193,18 @@ function removeScaleRow(idx) {
 
 function applyScalesAndRefresh() {
   applyColors();
+  // Auto-save scales to DB whenever applied
+  saveScalesToDB();
 }
 
 async function saveScalesToDB() {
-  if (!API_URL) { alert('Hanya tersedia saat online'); return; }
-  var result = await apiPost('/api/scales', { scales: COLOR_SCALES });
-  alert(result ? '✅ Color scales tersimpan ke DB!' : '❌ Gagal menyimpan');
+  if (!API_URL) return;
+  try { await apiPost('/api/scales', { scales: COLOR_SCALES }); } catch(e) { console.warn('saveScales failed:', e); }
 }
 
 function bakeScalesToHTML() {
-  // Trigger download with current COLOR_SCALES baked in
+  // Save scales to DB first, then trigger download
+  saveScalesToDB();
   document.getElementById('btn-download').click();
 }
 
