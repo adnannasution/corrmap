@@ -180,15 +180,15 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f0f2f5;color:#222;height
 
 <!-- ─── Header ─────────────────────────────────────────── -->
 <div class="hdr">
-  <div class="hdr-icon">⚙️</div>
+  <div class="hdr-icon">🏭</div>
   <div class="hdr-text">
     <h1>CORRMAP - CORROSION &amp; MAPING</h1>
-    <p>CAIS 5.2.0 — CDU #11 Revamping — Process Flow Diagram</p>
+    <p>CDU #11 Revamping — Process Flow Diagram</p>
   </div>
   <div class="hdr-right">
     <button class="btn warn" onclick="downloadTemplate()">⬇ Template Excel</button>
     <button class="btn success" onclick="openModal('upload')">⬆ Upload Data</button>
-    <button class="btn primary" onclick="openModal('cond')">📋 Conditional Data</button>
+    <!-- <button class="btn primary" onclick="openModal('cond')">📋 Conditional Data</button> -->
     <button class="btn primary" onclick="openModal('list')">📦 Equipment</button>
   </div>
 </div>
@@ -211,10 +211,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f0f2f5;color:#222;height
   <!-- <span style="margin-left:auto;font-size:10px;color:#bbb;padding-right:4px">Scroll=zoom • Drag=geser • Dbl-click=edit tag</span>
 
   <button class="btn success" id="btn-download" style="margin-left:6px" title="Download HTML dengan tag yang sudah diedit">⬇ Download HTML</button> -->
-</div>
-
-<!-- ─── Legend ─────────────────────────────────────────── -->
-<div class="legbar">
+<div class="legbar" style="margin-left:auto;">
   <span style="font-weight:600;color:#555;font-size:11px" id="leg-title">Warna Kondisi:</span>
   <div class="leg-scale">
     <div class="leg-seg ls-low">LOW</div>
@@ -222,8 +219,13 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f0f2f5;color:#222;height
     <div class="leg-seg ls-high">HIGH</div>
     <div class="leg-seg ls-sev">SEVERE</div>
   </div>
-  <span class="leg-info" id="leg-info">Pilih tab kondisi untuk mewarnai objek</span>
+
 </div>
+
+</div>
+
+<!-- ─── Legend ─────────────────────────────────────────── -->
+
 
 <!-- ─── Diagram ────────────────────────────────────────── -->
 <div class="diag-wrap">
@@ -863,7 +865,7 @@ Tag: 186" data-tag="186" data-uid="G0498"><rect x="705.5" y="-688" width="48" he
     <div id="zoom-box-rect"></div>
   </div>
   <div class="zi" id="zi">381%</div>
-  <div class="sb" id="sb">Hover pada objek untuk info</div>
+  <div class="sb" id="sb">Hover pada objek untuk info & Double Click untuk update</div>
 </div>
 
 <div id="tip" style="border-left-color: rgb(21, 101, 192); display: none; left: 990px; top: 194px;"><span class="t-tag">221</span><div class="t-row">📏 <span>Pipe/Line No.</span></div></div>
@@ -1591,7 +1593,7 @@ function mvTip(e){
   if(y<8)y=8;
   tipEl.style.left=x+'px';tipEl.style.top=y+'px';
 }
-function hideTip(){tipEl.style.display='none';tipOn=false;sbEl.textContent='Hover pada objek untuk info';}
+function hideTip(){tipEl.style.display='none';tipOn=false;sbEl.textContent='Hover pada objek untuk info & Double click untuk update';}
 
 // Best tooltip per tag — richest tip always shown
 const BEST_TIPS = {"1":"Type: Pipe/Line No.\nTag: 1\nStatus: Inactive","5":"Type: Pipe/Line No.\nTag: 5\nStatus: Inactive","12":"Type: Pipe/Line No.\nTag: 12\nStatus: Inactive","15":"Type: Pipe/Line No.\nTag: 15\nStatus: Normal","16":"Type: Pipe/Line No.\nTag: 16\nStatus: Inactive","22":"Type: Pipe/Line No.\nTag: 22\nStatus: Inactive","25":"Type: Pipe/Line No.\nTag: 25\nStatus: Inactive","26":"Type: Pipe/Line No.\nTag: 26\nStatus: Inactive","31":"Type: Pipe/Line No.\nTag: 31\nStatus: Inactive","50":"Type: Pipe/Line No.\nTag: 50","61":"Type: Pipe/Line No.\nTag: 61","92":"Type: Pipe/Line No.\nTag: 92","98":"Type: Pipe/Line No.\nTag: 98","145":"Type: Pipe/Line No.\nTag: 145","146":"Type: Pipe/Line No.\nTag: 146","169":"Type: Pipe/Line No.\nTag: 169\nStatus: Normal","178":"Type: Pipe/Line No.\nTag: 178","183":"Type: Pipe/Line No.\nTag: 183","186":"Type: Pipe/Line No.\nTag: 186","200":"Type: Pipe/Line No.\nTag: 200","206":"Type: Pipe/Line No.\nTag: 206","216":"Type: Pipe/Line No.\nTag: 216","217":"Type: Pipe/Line No.\nTag: 217","221":"Type: Pipe/Line No.\nTag: 221","229":"Type: Pipe/Line No.\nTag: 229","232":"Type: Pipe/Line No.\nTag: 232","233":"Type: Pipe/Line No.\nTag: 233","245":"Type: Pipe/Line No.\nTag: 245","252":"Type: Pipe/Line No.\nTag: 252","257":"Type: Pipe/Line No.\nTag: 257","274":"Type: Pipe/Line No.\nTag: 274","280":"Type: Pipe/Line No.\nTag: 280","303":"Type: Pipe/Line No.\nTag: 303","317":"Type: Pipe/Line No.\nTag: 317","354":"Type: Pipe/Line No.\nTag: 354","364":"Type: Pipe/Line No.\nTag: 364","2535":"Type: Pipe/Line No.\nTag: 2535","V-102":"Type: Vessel\nTag: V-102\nStatus: Normal","C-104":"Type: Column / Tower\nTag: C-104\nStatus: Normal","V-104":"Type: Vessel\nTag: V-104\nStatus: Normal","V-105":"Tag: V-105\nStatus: Normal","DESALTER":"Tag: DESALTER\nStatus: Normal","11-F-101":"Type: Fired Heater\nTag: 11-F-101\nStatus: Normal","P-109 A/B":"Type: Pump\nTag: P-109 A/B","E-114":"Type: Heat Exchanger\nTag: E-114","V-103":"Type: Vessel\nTag: V-103","P-104":"Type: Pump\nTag: P-104","B":"Type: Process Line\nTag: B","T":"Tag: T\nStatus: Inactive","P-105 A/B":"Type: Pump\nTag: P-105 A/B\nStatus: Inactive","P-106 A/B":"Type: Pump\nTag: P-106 A/B\nStatus: Inactive","P-108":"Type: Pump\nTag: P-108","P-107":"Type: Pump\nTag: P-107","P-102 A/B":"Type: Pump\nTag: P-102 A/B\nStatus: Normal","E-102":"Type: Heat Exchanger\nTag: E-102\nStatus: Normal","E-101":"Type: Heat Exchanger\nTag: E-101\nStatus: Normal","E-103A":"Type: Pump\nTag: E-103A\nStatus: Normal","E-103C":"Type: Pump\nTag: E-103C\nStatus: Normal","E-103B":"Type: Pump\nTag: E-103B\nStatus: Normal","E-103D":"Type: Pump\nTag: E-103D\nStatus: Normal","E-104":"Type: Heat Exchanger\nTag: E-104\nStatus: Normal","E-105B":"Type: Heat Exchanger\nTag: E-105B\nStatus: Normal","E-105A":"Type: Heat Exchanger\nTag: E-105A\nStatus: Normal","E-110A":"Type: Heat Exchanger\nTag: E-110A\nStatus: Normal","E-110B":"Type: Heat Exchanger\nTag: E-110B\nStatus: Normal","E-111B":"Type: Heat Exchanger\nTag: E-111B\nStatus: Normal","E-111A":"Type: Heat Exchanger\nTag: E-111A\nStatus: Normal","E-109":"Type: Pump\nTag: E-109\nStatus: Normal","E-106":"Type: Pump\nTag: E-106\nStatus: Normal","E-107B":"Type: Pump\nTag: E-107B\nStatus: Normal","E-107A":"Type: Pump\nTag: E-107A\nStatus: Normal","E-108":"Type: Pump\nTag: E-108\nStatus: Normal","11-E-112":"Type: Heat Exchanger\nTag: 11-E-112\nStatus: Normal","11-E-115A":"Type: Heat Exchanger\nTag: 11-E-115A\nStatus: Normal","E-118A/B":"Type: Heat Exchanger\nTag: E-118A/B\nStatus: Normal","E-119":"Type: Heat Exchanger\nTag: E-119\nStatus: Normal","11-E-120":"Type: Heat Exchanger\nTag: 11-E-120\nStatus: Normal","11-E-121":"Type: Heat Exchanger\nTag: 11-E-121\nStatus: Normal","P-110 A/B":"Type: Pump\nTag: P-110 A/B\nStatus: Inactive","P-105":"Type: Pump\nTag: P-105\nStatus: Inactive","P-112":"Type: Pump\nTag: P-112\nStatus: Normal","P-106":"Type: Pump\nTag: P-106\nStatus: Inactive","P-101 A/B":"Type: Pump\nTag: P-101 A/B\nStatus: Inactive","CRUDE":"Type: Process Stream\nTag: CRUDE","11-E-126":"Type: Heat Exchanger\nTag: 11-E-126\nStatus: Normal","P-111":"Type: Pump\nTag: P-111\nStatus: Inactive","11-E-127":"Type: Heat Exchanger\nTag: 11-E-127\nStatus: Normal","11-E-122":"Type: Heat Exchanger\nTag: 11-E-122","SW":"Type: Process Stream\nTag: SW","OS":"Type: Process Stream\nTag: OS","P-103 A/B":"Type: Pump\nTag: P-103 A/B\nStatus: Inactive","P-115 A/B":"Type: Pump\nTag: P-115 A/B\nStatus: Inactive","11-E-116 A/B":"Type: Heat Exchanger\nTag: 11-E-116 A/B\nStatus: Normal","11-E-117":"Type: Heat Exchanger\nTag: 11-E-117\nStatus: Normal","11-E-128":"Type: Heat Exchanger\nTag: 11-E-128\nStatus: Normal","WATER":"Type: Process Stream\nTag: WATER","P-114 A/B":"Type: Pump\nTag: P-114 A/B\nStatus: Inactive","P-113 A/B":"Type: Pump\nTag: P-113 A/B\nStatus: Inactive","LC":"Type: Level Controller\nTag: LC\nStatus: Inactive","11-V-107":"Type: DESALTER WATER SURGE DRUM\nTag: 11-V-107\nStatus: Normal","PDC":"Type: Pressure Diff. Controller\nTag: PDC\nStatus: Inactive","E-114 Top":"Type: Heat Exchanger\nTag: E-114 Top\nStatus: Normal","E-114 Bot":"Type: Heat Exchanger\nTag: E-114 Bot\nStatus: Normal","11-E-123 Top":"Type: Heat Exchanger\nTag: 11-E-123 Top\nStatus: Normal","11-E-123 Bot":"Type: Heat Exchanger\nTag: 11-E-123 Bot\nStatus: Normal","11-E-124 Top":"Type: Heat Exchanger\nTag: 11-E-124 Top\nStatus: Normal","11-E-124 Bot":"Type: Heat Exchanger\nTag: 11-E-124 Bot\nStatus: Normal","11-E-125 Top":"Type: Heat Exchanger\nTag: 11-E-125 Top\nStatus: Normal","11-E-125 Bot":"Type: Heat Exchanger\nTag: 11-E-125 Bot\nStatus: Normal","E-113 Top":"Type: Heat Exchanger\nTag: E-113 Top\nStatus: Normal","E-113 Bot":"Type: Heat Exchanger\nTag: E-113 Bot\nStatus: Normal","C-102 Top":"Type: Column / Tower\nTag: C-102 Top\nStatus: Normal","C-102 Tray":"Type: LGO STRIPPER\nTag: C-102 Tray\nStatus: Normal","C-102 Bottom":"Type: LGO STRIPPER\nTag: C-102 Bottom\nStatus: Normal","C-103 Top":"Type: HGO STRIPPER\nTag: C-103 Top\nStatus: Normal","C-103 Tray":"Type: HGO STRIPPER\nTag: C-103 Tray\nStatus: Normal","C-103 Bottom":"Type: HGO STRIPPER\nTag: C-103 Bottom\nStatus: Normal","E-114 Bottom":"Type: Heat Exchanger\nTag: E-114 Bottom\nStatus: Normal","E-113 Bottom":"Type: Heat Exchanger\\nTag: E-113 Bot\\nStatus: Normal\nTag: E-113 Bottom\nStatus: Normal","V-102 Bottom":"Type: Vessel\nTag: V-102 Bottom\nStatus: Normal","V-103 Top":"Type: Vessel\nTag: V-103 Top\nStatus: Normal","V-103 Bottom":"Type: Vessel\nTag: V-103 Bottom\nStatus: Normal","C-104 Top":"Type: Column / Tower\nTag: C-104 Top\nStatus: Normal","C-104 Tray 1":"Type: Column / Tower\nTag: C-104 Tray 1\nStatus: Normal","C-104 Tray 2":"Type: Column / Tower\nTag: C-104 Tray 2\nStatus: Normal","V-104 Bottom":"Type: Vessel\nTag: V-104 Bottom\nStatus: Normal","V-104 Top":"Type: Vessel\nTag: V-104 Top\nStatus: Normal","C-105":"Type: Vessel\nTag: C-105\nStatus: Normal","C-105 Top":"Type: SPLITTER\nTag: C-105 Top\nStatus: Normal","C-105 Tray":"Type: SPLITTER\nTag: C-105 Tray\nStatus: Normal","C-105 Tray 2":"Type: SPLITTER\nTag: C-105 Tray 2\nStatus: Normal","C-105 Bottom":"Type: SPLITTER\nTag: C-105 Bottom\nStatus: Normal","11-E-123 Bottom":"Type: Heat Exchanger\nTag: 11-E-123 Bottom\nStatus: Normal","11-E-124 Bottom":"Type: Heat Exchanger\nTag: 11-E-124 Bottom\nStatus: Normal","V-105 Top":"Tag: V-105 Top\nStatus: Normal","V-105 Bottom":"Tag: V-105 Bottom\nStatus: Normal","11-E-125 Bottom":"Type: Heat Exchanger\nTag: 11-E-125 Bottom\nStatus: Normal","V101B":"Tag: V101B\nStatus: Normal","V-101B":"Type: DESALTER\nTag: V-101B\nStatus: Normal","V-101A":"Type: DESALTER\nTag: V-101A\nStatus: Normal","C-101":"Type: MAIN FRACTIONATOR\nTag: C-101\nStatus: Normal","C-101 Top":"Type: MAIN FRACTIONATOR\nTag: C-101 Top\nStatus: Normal","C-101 Tray 1":"Type: MAIN FRACTIONATOR\nTag: C-101 Tray 1\nStatus: Normal","C-101 Tray 5":"Type: MAIN FRACTIONATOR\nTag: C-101 Tray 5\nStatus: Normal","C-101 Tray 20":"Type: MAIN FRACTIONATOR\nTag: C-101 Tray 20\nStatus: Normal","C-101 Tray 12":"Type: MAIN FRACTIONATOR\nTag: C-101 Tray 12\nStatus: Normal","C-101 Tray 15":"Type: MAIN FRACTIONATOR\nTag: C-101 Tray 15\nStatus: Normal","C-101 Tray 16":"Type: MAIN FRACTIONATOR\nTag: C-101 Tray 16\nStatus: Normal","C-101 Tray 22":"Type: MAIN FRACTIONATOR\nTag: C-101 Tray 22\nStatus: Normal","C-101 Tray 25":"Type: MAIN FRACTIONATOR\nTag: C-101 Tray 25\nStatus: Normal","C-101 Tray 26":"Type: MAIN FRACTIONATOR\nTag: C-101 Tray 26\nStatus: Normal","C-101 Tray 31":"Type: MAIN FRACTIONATOR\nTag: C-101 Tray 31\nStatus: Normal","C-101 Bottom":"Type: MAIN FRACTIONATOR\nTag: C-101 Bottom\nStatus: Normal","E-11A":"Type: Heat Exchanger\nTag: E-11A\nStatus: Normal","E":"Type: Pump\nTag: E\nStatus: Normal"};
