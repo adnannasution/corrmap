@@ -217,7 +217,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f0f2f5;color:#222;height
     <div class="leg-seg ls-high">HIGH</div>
     <div class="leg-seg ls-sev">SEVERE</div>
   </div>
-
+  <span class="leg-info" id="leg-info"></span>
 </div>
 
 </div>
@@ -1428,8 +1428,10 @@ function setMode(m,btn){
   applyColors();
   const info={default:'Warna original diagram',visual:'Kondisi inspeksi visual',corrosion:'Tingkat korosi',rl:'Sisa umur pakai'};
   const title={default:'Warna Default',visual:'Kondisi Visual',corrosion:'Tingkat Korosi',rl:'Remaining Life'};
-  document.getElementById('leg-info').textContent=info[m]||'';
-  document.getElementById('leg-title').textContent=(title[m]||'Kondisi')+':';
+  var legInfo = document.getElementById('leg-info');
+  var legTitle = document.getElementById('leg-title');
+  if (legInfo) legInfo.textContent = info[m]||'';
+  if (legTitle) legTitle.textContent = (title[m]||'Kondisi')+':';
   renderLegend();
 }
 
@@ -1523,15 +1525,16 @@ function getLvColor(lv, mode) {
   return LC[lv]||'#999';
 }
 
-function renderLegend() {
+function renderLegend(forceScaleKey) {
   var container = document.querySelector('.leg-scale');
   if (!container) return;
-  if (currentMode === 'default') {
-    container.innerHTML = '';
-    return;
+  var scaleKey;
+  if (forceScaleKey) {
+    scaleKey = forceScaleKey;
+  } else {
+    if (currentMode === 'default') { container.innerHTML = ''; return; }
+    scaleKey = currentMode==='rl' ? 'rl' : currentMode==='corrosion' ? 'corr_rate' : 'visual';
   }
-  var scaleKey = currentMode==='rl' ? 'rl'
-    : currentMode==='corrosion' ? 'corr_rate' : 'visual';
   var scale = COLOR_SCALES[scaleKey] || [];
   container.innerHTML = scale.map(function(e) {
     return '<div class="leg-seg" style="background:' + e.color + '">' + e.label.toUpperCase() + '</div>';
@@ -2203,7 +2206,7 @@ function renderScaleRows() {
 function updateScaleEntry(idx, field, val) {
   if (COLOR_SCALES[curScaleKey] && COLOR_SCALES[curScaleKey][idx]) {
     COLOR_SCALES[curScaleKey][idx][field] = val;
-    renderLegend();
+    renderLegend(curScaleKey);
   }
 }
 
@@ -2222,13 +2225,13 @@ function addScaleRow() {
   row.className = 'scale-row';
   row.innerHTML = renderScaleRowHTML(newEntry, idx, meta, opLabel);
   container.appendChild(row);
-  renderLegend();
+  renderLegend(curScaleKey);
 }
 
 function removeScaleRow(idx) {
   COLOR_SCALES[curScaleKey].splice(idx, 1);
   renderScaleRows();
-  renderLegend();
+  renderLegend(curScaleKey);
 }
 
 function applyScalesAndRefresh() {
