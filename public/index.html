@@ -175,7 +175,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f0f2f5;color:#222;height
 .edit-save:hover{background:#0d47a1}
 .edit-info{font-size:10px;color:#aaa;margin-top:2px;font-style:italic}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script></head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script></head>
 <body>
 
 <!-- ─── Header ─────────────────────────────────────────── -->
@@ -208,9 +208,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f0f2f5;color:#222;height
     <button class="ctab" data-mode="corrosion" onclick="setMode('corrosion',this)">🔬 Corrosion</button>
     <button class="ctab" data-mode="rl" onclick="setMode('rl',this)">⏳ Remaining Life</button>
   </div>
-  <!-- <span style="margin-left:auto;font-size:10px;color:#bbb;padding-right:4px">Scroll=zoom • Drag=geser • Dbl-click=edit tag</span>
-
-  <button class="btn success" id="btn-download" style="margin-left:6px" title="Download HTML dengan tag yang sudah diedit">⬇ Download HTML</button> -->
+  <button class="btn success" id="btn-download" style="margin-left:6px" title="Download HTML dengan tag yang sudah diedit">⬇ Download HTML</button>
 <div class="legbar" style="margin-left:auto;">
   <span style="font-weight:600;color:#555;font-size:11px" id="leg-title">Warna Kondisi:</span>
   <div class="leg-scale">
@@ -1342,7 +1340,7 @@ async function handleUpload(type, file){
         // Update EQUIP_LIST entry or add
         const idx = EQUIP_LIST.findIndex(e=>e.tag===tag);
         if(idx>=0){EQUIP_LIST[idx].type=tp||EQUIP_LIST[idx].type; EQUIP_LIST[idx].status=st||EQUIP_LIST[idx].status;}
-        else EQUIP_LIST.push({tag,type:tp,status:st,color:'',status:st});
+        else EQUIP_LIST.push({tag,type:tp,status:st,color:''});
         updated++;
       } else if(type==='visual'){
         if(!COND[tag]) COND[tag]={tag,type:'',visual_level:'',visual_notes:'',corrosion_level:'',corrosion_rate:0,thickness:0,rl_value:0,rl_level:''};
@@ -1432,6 +1430,7 @@ function setMode(m,btn){
   const title={default:'Warna Default',visual:'Kondisi Visual',corrosion:'Tingkat Korosi',rl:'Remaining Life'};
   document.getElementById('leg-info').textContent=info[m]||'';
   document.getElementById('leg-title').textContent=(title[m]||'Kondisi')+':';
+  renderLegend();
 }
 
 function getLv(tag, mode) {
@@ -1522,6 +1521,17 @@ function getLvColor(lv, mode) {
   var scale = COLOR_SCALES[scaleKey]||[];
   for (var i=0; i<scale.length; i++) { if (scale[i].label===lv) return scale[i].color; }
   return LC[lv]||'#999';
+}
+
+function renderLegend() {
+  var scaleKey = currentMode==='rl' ? 'rl'
+    : currentMode==='corrosion' ? 'corr_rate' : 'visual';
+  var scale = COLOR_SCALES[scaleKey] || [];
+  var container = document.querySelector('.leg-scale');
+  if (!container) return;
+  container.innerHTML = scale.map(function(e) {
+    return '<div class="leg-seg" style="background:' + e.color + '">' + e.label.toUpperCase() + '</div>';
+  }).join('');
 }
 
 function showTip(e,g){
@@ -1908,7 +1918,7 @@ function updNum(tag,field,val){if(COND[tag])COND[tag][field]=parseFloat(val)||0;
 function updRL(tag,val){
   if(!COND[tag])return;
   const v=parseFloat(val)||0; COND[tag].rl_value=v;
-  const lv=v<5?'Severe':v<10?'High':v<15?'Moderate':'Low';
+  const lv=getLvFromRL(v) || 'Low';
   COND[tag].rl_level=lv;
   // Update select in same row
   const row=document.querySelector(`tr [onchange*="updRL('${tag.replace(/'/g,"\\'")}")"]`)?.closest('tr');
@@ -1936,11 +1946,6 @@ function saveR(tag, pfx) {
 // ══════════════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════════════
-// Load SheetJS for Excel parsing
-const sheetjs = document.createElement('script');
-sheetjs.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
-document.head.appendChild(sheetjs);
-
 storeOrig();
 applyVB();
 refreshTypeDropdowns();
@@ -2036,6 +2041,7 @@ refreshTypeDropdowns();
   }
 
   applyColors();
+  renderLegend();
   initDone = true;
   // Auto-push all tags to DB once after init (ensures DB is always in sync)
   pushAllTags();
@@ -2213,6 +2219,7 @@ function removeScaleRow(idx) {
 
 function applyScalesAndRefresh() {
   applyColors();
+  renderLegend();
   // Auto-save scales to DB whenever applied
   saveScalesToDB();
 }
@@ -2307,8 +2314,7 @@ function openEditUID(uid) {
   selVisualVal = vn;
   renderVisualButtons(vn);
   var vb = document.getElementById('edit-visual-badge');
-  var vLvMap = {1:'Low',2:'Moderate',3:'High',4:'Severe'};
-  var vLv = vLvMap[vn]||'';
+  var vLv = (COLOR_SCALES.visual[vn - 1] || {}).label || '';
   if(vb){ vb.className='lv-badge '+(vLv||'empty'); vb.textContent=vLv||'—'; }
   var vNotes = document.getElementById('edit-visual-notes');
   if(vNotes) vNotes.value = d.visual_notes || '';
@@ -2416,8 +2422,7 @@ function saveEdit() {
   }
 
   // ── Read condition values from modal tabs ──────────────────────────────
-  var lvMap = {1:'Low',2:'Moderate',3:'High',4:'Severe'};
-  var vLv   = lvMap[selVisualVal] || '';
+  var vLv   = (COLOR_SCALES.visual[selVisualVal - 1] || {}).label || '';
   var vNotes = (document.getElementById('edit-visual-notes')||{}).value || '';
   var corrRate  = parseFloat((document.getElementById('edit-corr-rate')||{}).value)||0;
   var thickness = parseFloat((document.getElementById('edit-thickness')||{}).value)||0;
@@ -2517,10 +2522,12 @@ function refreshTypeDropdowns() {
   });
 })();
 // Enter key saves in edit modal
-document.getElementById('edit-tag').addEventListener('keydown', function(e) {
+var _editTag = document.getElementById('edit-tag');
+if (_editTag) _editTag.addEventListener('keydown', function(e) {
   if (e.key === 'Enter') saveEdit();
 });
-document.getElementById('edit-type-custom').addEventListener('keydown', function(e) {
+var _editTypeCustom = document.getElementById('edit-type-custom');
+if (_editTypeCustom) _editTypeCustom.addEventListener('keydown', function(e) {
   if (e.key === 'Enter') saveEdit();
 });
 document.addEventListener('keydown', function(e) {

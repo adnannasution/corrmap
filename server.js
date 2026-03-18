@@ -239,23 +239,25 @@ app.get('/api/summary', async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// ── Start ─────────────────────────────────────────────────────────────────
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// ── Start ─────────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`🚀 CAIS Server running on port ${PORT}`);
-});
-
 async function connectDB(retries = 5) {
   for (let i = 0; i < retries; i++) {
-    try { await initDB(); return; }
+    try {
+      await initDB();
+      app.listen(PORT, () => {
+        console.log(`🚀 CAIS Server running on port ${PORT}`);
+      });
+      return;
+    }
     catch (err) {
       console.error(`DB attempt ${i+1}/${retries} failed: ${err.message}`);
       if (i < retries - 1) { console.log('Retrying in 3s...'); await new Promise(r => setTimeout(r, 3000)); }
     }
   }
-  console.error('❌ DB unavailable');
+  console.error('❌ DB unavailable — server not started');
 }
 connectDB();
