@@ -2234,9 +2234,26 @@ function removeScaleRow(idx) {
   renderLegend(curScaleKey);
 }
 
+function flushScaleEditorToMemory() {
+  // Read current DOM input values into COLOR_SCALES before save/apply
+  var container = document.getElementById('scale-editor-rows');
+  if (!container) return;
+  var rows = container.querySelectorAll('.scale-row');
+  rows.forEach(function(row, idx) {
+    if (!COLOR_SCALES[curScaleKey] || !COLOR_SCALES[curScaleKey][idx]) return;
+    var colorEl = row.querySelector('input[type=color]');
+    var labelEl = row.querySelector('input[type=text]');
+    var valueEl = row.querySelector('input[type=number]');
+    if (colorEl) COLOR_SCALES[curScaleKey][idx].color = colorEl.value;
+    if (labelEl) COLOR_SCALES[curScaleKey][idx].label = labelEl.value;
+    if (valueEl) COLOR_SCALES[curScaleKey][idx].value = parseFloat(valueEl.value) || 0;
+  });
+}
+
 function applyScalesAndRefresh() {
+  flushScaleEditorToMemory();
   applyColors();
-  renderLegend();
+  renderLegend(curScaleKey);
   // Auto-save scales to DB whenever applied
   saveScalesToDB();
 }
