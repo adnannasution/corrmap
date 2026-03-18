@@ -1524,11 +1524,15 @@ function getLvColor(lv, mode) {
 }
 
 function renderLegend() {
+  var container = document.querySelector('.leg-scale');
+  if (!container) return;
+  if (currentMode === 'default') {
+    container.innerHTML = '';
+    return;
+  }
   var scaleKey = currentMode==='rl' ? 'rl'
     : currentMode==='corrosion' ? 'corr_rate' : 'visual';
   var scale = COLOR_SCALES[scaleKey] || [];
-  var container = document.querySelector('.leg-scale');
-  if (!container) return;
   container.innerHTML = scale.map(function(e) {
     return '<div class="leg-seg" style="background:' + e.color + '">' + e.label.toUpperCase() + '</div>';
   }).join('');
@@ -2199,6 +2203,7 @@ function renderScaleRows() {
 function updateScaleEntry(idx, field, val) {
   if (COLOR_SCALES[curScaleKey] && COLOR_SCALES[curScaleKey][idx]) {
     COLOR_SCALES[curScaleKey][idx][field] = val;
+    renderLegend();
   }
 }
 
@@ -2209,12 +2214,21 @@ function addScaleRow() {
   if (meta.op !== 'index') newEntry.value = 0;
   else newEntry.value = scale.length + 1;
   scale.push(newEntry);
-  renderScaleRows();
+  // Only append new row — don't re-render all rows (would wipe unsaved user edits)
+  var container = document.getElementById('scale-editor-rows');
+  var idx = scale.length - 1;
+  var opLabel = meta.op === 'index' ? idx + 1 : meta.op;
+  var row = document.createElement('div');
+  row.className = 'scale-row';
+  row.innerHTML = renderScaleRowHTML(newEntry, idx, meta, opLabel);
+  container.appendChild(row);
+  renderLegend();
 }
 
 function removeScaleRow(idx) {
   COLOR_SCALES[curScaleKey].splice(idx, 1);
   renderScaleRows();
+  renderLegend();
 }
 
 function applyScalesAndRefresh() {
