@@ -236,8 +236,8 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f0f2f5;color:#222;height
     <p>CDU #11 Revamping — Process Flow Diagram</p>
   </div>
   <div class="hdr-right">
-    <button class="btn warn" onclick="downloadTemplate()">⬇ Template Excel</button>
-    <button class="btn success" onclick="openModal('upload')">⬆ Upload Data</button>
+    <!-- <button class="btn warn" onclick="downloadTemplate()">⬇ Template Excel</button>
+    <button class="btn success" onclick="openModal('upload')">⬆ Upload Data</button> -->
     <!-- <button class="btn primary" onclick="openModal('cond')">📋 Conditional Data</button> -->
     <button class="btn primary" onclick="openModal('list')">📦 Equipment</button>
   </div>
@@ -258,7 +258,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f0f2f5;color:#222;height
     <button class="ctab" data-mode="corrosion" onclick="setMode('corrosion',this)">🔬 Corrosion</button>
     <button class="ctab" data-mode="rl" onclick="setMode('rl',this)">⏳ Remaining Life</button>
   </div>
-  <button class="btn success" id="btn-download" style="margin-left:6px" title="Download HTML dengan tag yang sudah diedit">⬇ Download HTML</button>
+  <!-- <button class="btn success" id="btn-download" style="margin-left:6px" title="Download HTML dengan tag yang sudah diedit">⬇ Download HTML</button> -->
 <div class="legbar" style="margin-left:auto;">
   <span style="font-weight:600;color:#555;font-size:11px" id="leg-title">Warna Kondisi:</span>
   <div class="leg-scale">
@@ -2114,19 +2114,7 @@ function renderUpload(){
       `).join('')}
     </div>
 
-    <div class="up-divider"><span>atau upload semua sheet sekaligus</span></div>
 
-    <div class="up-main-zone">
-      <div class="up-main-icon">📊</div>
-      <div class="up-main-text">
-        <strong>Upload Template Lengkap (Semua Sheet)</strong>
-        <span>File .xlsx dengan sheet: Visual Condition, Corrosion, Remaining Life, Equipment</span>
-      </div>
-      <label class="up-main-btn">
-        <input type="file" accept=".xlsx,.xls" onchange="handleUploadAll(this.files[0])" style="display:none">
-        ⬆ Pilih File
-      </label>
-    </div>
     <div id="up-status-all" class="up-status-bar" style="display:none"></div>
 
     <div class="up-footer-note">
