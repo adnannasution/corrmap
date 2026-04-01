@@ -236,8 +236,8 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f0f2f5;color:#222;height
     <p>CDU #11 Revamping — Process Flow Diagram</p>
   </div>
   <div class="hdr-right">
-    <!-- <button class="btn warn" onclick="downloadTemplate()">⬇ Template Excel</button>
-    <button class="btn success" onclick="openModal('upload')">⬆ Upload Data</button> -->
+    <button class="btn warn" onclick="downloadTemplate()">⬇ Template Excel</button>
+    <button class="btn success" onclick="openModal('upload')">⬆ Upload Data</button>
     <!-- <button class="btn primary" onclick="openModal('cond')">📋 Conditional Data</button> -->
     <button class="btn primary" onclick="openModal('list')">📦 Equipment</button>
   </div>
@@ -258,7 +258,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f0f2f5;color:#222;height
     <button class="ctab" data-mode="corrosion" onclick="setMode('corrosion',this)">🔬 Corrosion</button>
     <button class="ctab" data-mode="rl" onclick="setMode('rl',this)">⏳ Remaining Life</button>
   </div>
-  <!-- <button class="btn success" id="btn-download" style="margin-left:6px" title="Download HTML dengan tag yang sudah diedit">⬇ Download HTML</button> -->
+  <button class="btn success" id="btn-download" style="margin-left:6px" title="Download HTML dengan tag yang sudah diedit">⬇ Download HTML</button>
 <div class="legbar" style="margin-left:auto;">
   <span style="font-weight:600;color:#555;font-size:11px" id="leg-title">Warna Kondisi:</span>
   <div class="leg-scale">
@@ -2114,7 +2114,20 @@ function renderUpload(){
       `).join('')}
     </div>
 
-   
+    <div class="up-divider"><span>atau upload semua sheet sekaligus</span></div>
+
+    <div class="up-main-zone">
+      <div class="up-main-icon">📊</div>
+      <div class="up-main-text">
+        <strong>Upload Template Lengkap (Semua Sheet)</strong>
+        <span>File .xlsx dengan sheet: Visual Condition, Corrosion, Remaining Life, Equipment</span>
+      </div>
+      <label class="up-main-btn">
+        <input type="file" accept=".xlsx,.xls" onchange="handleUploadAll(this.files[0])" style="display:none">
+        ⬆ Pilih File
+      </label>
+    </div>
+    <div id="up-status-all" class="up-status-bar" style="display:none"></div>
 
     <div class="up-footer-note">
       ⚠ Data bersifat <b>UPDATE</b> — hanya tag yang ada di file yang diperbarui, tag lain tidak terpengaruh
@@ -2585,6 +2598,35 @@ refreshTypeDropdowns();
     if (remoteScales) {
       Object.assign(COLOR_SCALES, remoteScales);
       console.log('✅ Color scales loaded from DB');
+    }
+
+    // ── Load label overrides from DB ───────────────────────────────────
+    var remoteLabels = await apiGet('/api/labels');
+    if (remoteLabels && Object.keys(remoteLabels).length > 0) {
+      Object.keys(remoteLabels).forEach(function(lkey) {
+        var lv = remoteLabels[lkey];
+        // Find g elements with data-lbl-key matching, or find by text content
+        var originalText = lkey.replace(/^lbl:/, '');
+        // Search all label g elements (no data-uid, has foreignObject)
+        document.querySelectorAll('#diagram-inner g:not([data-uid])').forEach(function(lg) {
+          var bEl2    = lg.querySelector('foreignObject b');
+          var plainEl2 = null;
+          if (!bEl2) {
+            lg.querySelectorAll('foreignObject div').forEach(function(d) {
+              if (d.children.length === 0 && d.textContent.trim() === originalText) plainEl2 = d;
+            });
+          }
+          var fontEl2 = lg.querySelector('foreignObject font');
+          var curText = bEl2 ? bEl2.textContent.trim() : (plainEl2 ? plainEl2.textContent.trim() : '');
+          if (curText === originalText || lg.getAttribute('data-lbl-key') === lkey) {
+            if (bEl2)          bEl2.textContent     = lv.main;
+            else if (plainEl2) plainEl2.textContent  = lv.main;
+            if (fontEl2 && lv.sub) fontEl2.textContent = lv.sub;
+            lg.setAttribute('data-lbl-key', lkey);
+          }
+        });
+      });
+      console.log('✅ Label overrides loaded:', Object.keys(remoteLabels).length);
     }
 
     if (sb) {
@@ -3211,50 +3253,51 @@ function saveLabelEdit() {
     });
   }
 
+  // Simpan nilai LAMA sebelum diubah (untuk cari sibling)
+  var oldMain = bEl ? bEl.textContent.trim() : (plainEl ? plainEl.textContent.trim() : '');
+
   if (bEl)          bEl.textContent    = newMain;
   else if (plainEl) plainEl.textContent = newMain;
 
   if (fontEl) fontEl.textContent = newSub;
 
-  // ── Fix label clipping: remove max-height + overflow:hidden from container divs ──
+  // ── Fix label clipping ──
   g.querySelectorAll('foreignObject div').forEach(function(d) {
     if (d.style.maxHeight || d.style.overflow === 'hidden') {
       d.style.maxHeight = 'none';
       d.style.overflow  = 'visible';
     }
   });
-  // Also ensure foreignObject itself allows overflow
   var fo = g.querySelector('foreignObject');
   if (fo) {
     fo.style.overflow = 'visible';
-    // Try to expand height to accommodate longer text
     var currentH = parseFloat(fo.getAttribute('height')) || 0;
     if (currentH > 0 && currentH < 60) fo.setAttribute('height', '100%');
   }
 
-  // ── Save label to DB via /api/tags ──────────────────────────────────────
+  // ── Save label to DB ──────────────────────────────────────────────────────
   if (API_URL) {
-    // Get uid from the nearest ancestor/sibling g[data-uid], or from the label g itself
     var uid  = g.getAttribute('data-uid');
-    var tag  = g.getAttribute('data-tag') || newMain;
+    var tag  = g.getAttribute('data-tag') || oldMain;
 
-    // For label-only <g> (no data-uid), try to find corresponding data-uid element by matching old label
+    // Cari data-uid dari sibling/nearby g yang data-tip-nya mengandung label LAMA
     if (!uid) {
-      // Search sibling/nearby g with data-uid whose foreignObject text matches the old label
       var parentG = g.parentElement;
       if (parentG) {
         var siblings = parentG.querySelectorAll('g[data-uid]');
         siblings.forEach(function(sg) {
+          if (uid) return;
           var stip = sg.getAttribute('data-tip') || '';
-          if (stip.indexOf(newMain) >= 0 || (bEl && stip.indexOf(tag) >= 0)) {
-            if (!uid) uid = sg.getAttribute('data-uid');
+          var stag = sg.getAttribute('data-tag') || '';
+          if (oldMain && (stip.indexOf(oldMain) >= 0 || stag === oldMain)) {
+            uid = sg.getAttribute('data-uid');
           }
         });
       }
     }
 
-    // Determine type: use newSub as type (sub-label is usually the equipment type)
-    // Fall back to existing data-tip type
+    // Fallback: simpan label sebagai settings key kalau tidak ada uid
+    // Pakai key "label:<oldMain>" sehingga bisa di-restore saat load
     var tipType = '';
     var nearG = uid ? document.querySelector('#diagram-inner g[data-uid="' + uid + '"]') : null;
     if (nearG) {
@@ -3266,13 +3309,27 @@ function saveLabelEdit() {
     if (uid) {
       apiPost('/api/tags', { uid: uid, tag: newMain, type: typeToSave })
         .then(function(result) {
-          // Show brief success indicator on the label
+          if (!result) return;
           var indicator = document.createElement('div');
           indicator.textContent = '✓ Tersimpan';
           indicator.style.cssText = 'position:fixed;bottom:60px;right:20px;background:#2e7d32;color:#fff;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:700;z-index:9999;box-shadow:0 2px 8px rgba(0,0,0,.2)';
           document.body.appendChild(indicator);
           setTimeout(function(){ document.body.removeChild(indicator); }, 2000);
         });
+    } else {
+      // Tidak ada uid — simpan sebagai label override via /api/labels
+      var lkey = 'lbl:' + (oldMain || newMain);
+      apiPost('/api/labels', { lbl_key: lkey, main_text: newMain, sub_text: newSub })
+        .then(function(result) {
+          var ok = !!result;
+          var indicator2 = document.createElement('div');
+          indicator2.textContent = ok ? '✓ Label tersimpan' : '⚠ Label diperbarui (lokal saja)';
+          indicator2.style.cssText = 'position:fixed;bottom:60px;right:20px;background:' + (ok ? '#2e7d32' : '#e65100') + ';color:#fff;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:700;z-index:9999;box-shadow:0 2px 8px rgba(0,0,0,.2)';
+          document.body.appendChild(indicator2);
+          setTimeout(function(){ document.body.removeChild(indicator2); }, 2500);
+        });
+      // Tandai g agar bisa dicari saat load
+      g.setAttribute('data-lbl-key', lkey);
     }
   }
 

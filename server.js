@@ -48,6 +48,14 @@ async function initDB() {
       value      TEXT,
       updated_at TIMESTAMPTZ DEFAULT NOW()
     );
+    CREATE TABLE IF NOT EXISTS labels (
+      unit       TEXT NOT NULL DEFAULT 'cdu11',
+      lbl_key    TEXT NOT NULL,
+      main_text  TEXT NOT NULL,
+      sub_text   TEXT DEFAULT '',
+      updated_at TIMESTAMPTZ DEFAULT NOW(),
+      PRIMARY KEY (unit, lbl_key)
+    );
   `);
 
   // ── Safe migration: add unit column if old single-unit tables exist ──
@@ -208,6 +216,34 @@ app.post('/api/tags/bulk', async (req, res) => {
     }
     res.json({ saved });
   } catch (err) { console.error(err); res.status(500).json({ error: err.message }); }
+});
+
+// ── LABELS (standalone text labels on diagram) ────────────────────────────
+app.get('/api/labels', async (req, res) => {
+  try {
+    const unit = req.query.unit || 'cdu11';
+    const result = await pool.query(
+      'SELECT * FROM labels WHERE unit=$1 ORDER BY lbl_key ASC', [unit]
+    );
+    const labels = {};
+    result.rows.forEach(row => { labels[row.lbl_key] = { main: row.main_text, sub: row.sub_text }; });
+    res.json(labels);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/labels', async (req, res) => {
+  try {
+    const { unit='cdu11', lbl_key, main_text, sub_text='' } = req.body;
+    if (!lbl_key || !main_text) return res.status(400).json({ error: 'lbl_key and main_text required' });
+    const result = await pool.query(`
+      INSERT INTO labels (unit, lbl_key, main_text, sub_text, updated_at)
+      VALUES ($1,$2,$3,$4,NOW())
+      ON CONFLICT (unit, lbl_key) DO UPDATE SET
+        main_text=EXCLUDED.main_text, sub_text=EXCLUDED.sub_text, updated_at=NOW()
+      RETURNING *
+    `, [unit, lbl_key, main_text, sub_text]);
+    res.json(result.rows[0]);
+  } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
 // ── Units list (for dashboard) ─────────────────────────────────────────────
