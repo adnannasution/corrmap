@@ -1999,6 +1999,8 @@ function getData(){
   const q=document.getElementById('msrch').value.toLowerCase();
   const fl=document.getElementById('mflv').value;
   const ft=document.getElementById('mftp').value;
+  // Buat set tag valid dari EQUIP_LIST
+  const validTags = new Set(EQUIP_LIST.map(function(e){ return e.tag; }));
   if(curTab==='list'){
     return EQUIP_LIST.filter(e=>{
       const mq=!q||e.tag.toLowerCase().includes(q)||(e.type||'').toLowerCase().includes(q);
@@ -2006,6 +2008,8 @@ function getData(){
     });
   }
   return Object.values(COND).filter(d=>{
+    // Hanya tampilkan tag yang ada di EQUIP_LIST
+    if(!validTags.has(d.tag)) return false;
     const lv=curTab==='visual'?d.visual_level:curTab==='corrosion'?d.corrosion_level:d.rl_level;
     const mq=!q||d.tag.toLowerCase().includes(q)||(d.type||'').toLowerCase().includes(q);
     const ml=fl==='all'||lv===fl; const mt=ft==='all'||d.type===ft;
