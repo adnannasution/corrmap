@@ -1688,7 +1688,7 @@ function applyColors(){
     saved.forEach(function(s) {
       if (s.isLine) {
         // Line/pipe: apply color to stroke
-        s.el.setAttribute('stroke', worstColor || s.stroke);
+        s.el.setAttribute('stroke', worstColor || '#9e9e9e');
       } else {
         // Shape: apply color to fill (skip fill=none elements like hitbox lines)
         if (!s.fill || s.fill === 'none') return;
