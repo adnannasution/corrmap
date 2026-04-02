@@ -2530,6 +2530,7 @@ refreshTypeDropdowns();
 
 
 // ── Build EQUIP_LIST dari SVG diagram ──
+EQUIP_LIST.length = 0; // reset dulu
 document.querySelectorAll('#diagram-inner g[data-uid][data-tag]').forEach(function(g) {
   var tag  = g.getAttribute('data-tag') || '';
   var tip  = g.getAttribute('data-tip') || '';
