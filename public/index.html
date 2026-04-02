@@ -2602,17 +2602,6 @@ refreshTypeDropdowns();
       Object.assign(COND, remoteCond);
       console.log('✅ Loaded', Object.keys(remoteCond).length, 'conditions from DB');
 
-      // ── Sync EQUIP_LIST dari COND ──────────────────────────────────
-      Object.values(COND).forEach(function(d) {
-        if (!d.tag) return;
-        var idx = EQUIP_LIST.findIndex(function(e){ return e.tag === d.tag; });
-        if (idx < 0) {
-          EQUIP_LIST.push({ tag: d.tag, type: d.type || '', status: '', color: '' });
-        } else {
-          if (d.type) EQUIP_LIST[idx].type = d.type;
-        }
-      });
-
       if (typeof renderTbl === 'function') renderTbl();
     }
 
