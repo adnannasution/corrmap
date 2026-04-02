@@ -1638,7 +1638,16 @@ function getColorForMode(tag, mode) {
   return getColorForTag(tag, mode);
 }
 
-function applyToMap(){ applyColors(); closeModal(); }
+function applyToMap(){
+  // Save semua COND yang terlihat ke DB
+  if (API_URL) {
+    Object.values(COND).forEach(function(d) {
+      if (d.tag) apiPost('/api/conditions', d);
+    });
+  }
+  applyColors();
+  closeModal();
+}
 
 function applyColors(){
   const all=document.querySelectorAll('#diagram-inner g[data-tag]');
