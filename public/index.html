@@ -2529,25 +2529,7 @@ applyVB();
 refreshTypeDropdowns();
 
 
-// ── Build EQUIP_LIST dari SVG diagram ──
-EQUIP_LIST.length = 0; // reset dulu
-document.querySelectorAll('#diagram-inner g[data-uid][data-tag]').forEach(function(g) {
-  var tag  = g.getAttribute('data-tag') || '';
-  var tip  = g.getAttribute('data-tip') || '';
-  var type = '';
-  var status = '';
-  tip.split('\n').forEach(function(l) {
-    if (l.startsWith('Type: '))   type   = l.slice(6);
-    if (l.startsWith('Status: ')) status = l.slice(8);
-  });
-  if (!tag) return;
-  // Hanya tambah jika belum ada
-  var tags = tag.split(' | ').map(function(t){ return t.trim(); }).filter(Boolean);
-  tags.forEach(function(t) {
-    var idx = EQUIP_LIST.findIndex(function(e){ return e.tag === t; });
-    if (idx < 0) EQUIP_LIST.push({ tag: t, type: type, status: status, color: '' });
-  });
-});
+
 
 
 // ── Fix semua label overflow di SVG saat load ──
@@ -2634,6 +2616,28 @@ document.querySelectorAll('#diagram-inner g[data-tag]').forEach(function(g) {
 
       console.log('✅ Applied', tagUpdated, 'tags from DB');
       refreshTypeDropdowns();
+
+// ── Rebuild EQUIP_LIST dari SVG setelah DB tags terupdate ──
+      EQUIP_LIST.length = 0;
+      document.querySelectorAll('#diagram-inner g[data-uid][data-tag]').forEach(function(g) {
+        var tag  = g.getAttribute('data-tag') || '';
+        var tip  = g.getAttribute('data-tip') || '';
+        var type = '', status = '';
+        tip.split('\n').forEach(function(l) {
+          if (l.startsWith('Type: '))   type   = l.slice(6);
+          if (l.startsWith('Status: ')) status = l.slice(8);
+        });
+        if (!tag) return;
+        tag.split(' | ').map(function(t){ return t.trim(); }).filter(Boolean).forEach(function(t) {
+          if (EQUIP_LIST.findIndex(function(e){ return e.tag === t; }) < 0)
+            EQUIP_LIST.push({ tag: t, type: type, status: status, color: '' });
+        });
+      });
+
+   
+
+
+
       if (typeof renderTbl === 'function') renderTbl();  // ← TAMBAH INI
     }
 
