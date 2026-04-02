@@ -1201,10 +1201,17 @@ function getColorForTag(tag, mode) {
     if (!t) return r.color;
     return labels2.indexOf(r.label) >= labels2.indexOf(t.label) ? r.color : t.color;
   }
-  if (mode === 'rl') {
+// SESUDAH:
+if (mode === 'rl') {
     var rl = getLvAndColor('rl', d.rl_value);
-    return rl ? rl.color : null;
-  }
+    if (rl) return rl.color;
+    var rlV = parseFloat(String(d.rl_value).replace(',','.'));
+    if (!isNaN(rlV) && rlV > 0) {
+      var lowEntry = COLOR_SCALES.rl[0];
+      return lowEntry ? lowEntry.color : null;
+    }
+    return null;
+}
   return null;
 }
 
@@ -2495,6 +2502,7 @@ function saveR(tag, pfx) {
   }
 
   applyColors();
+  renderTbl();
 }
 
 // ══════════════════════════════════════════════════════
@@ -2572,6 +2580,7 @@ refreshTypeDropdowns();
 
       console.log('✅ Applied', tagUpdated, 'tags from DB');
       refreshTypeDropdowns();
+      if (typeof renderTbl === 'function') renderTbl();  // ← TAMBAH INI
     }
 
     // ── Load conditions from DB ────────────────────────────────────────
@@ -2579,6 +2588,7 @@ refreshTypeDropdowns();
     if (remoteCond && Object.keys(remoteCond).length > 0) {
       Object.assign(COND, remoteCond);
       console.log('✅ Loaded', Object.keys(remoteCond).length, 'conditions from DB');
+      if (typeof renderTbl === 'function') renderTbl();
     }
 
     // ── Load COLOR_SCALES from DB ──────────────────────────────────────
@@ -3134,21 +3144,21 @@ function refreshTypeDropdowns() {
   });
 })();
 
-// ══════════════════════════════════════════════════════
-//  DOUBLE-CLICK EDIT SEMUA LABEL (termasuk C-102, P-107, dll)
-// ── Helper: fix label overflow (called after edit and after DB load) ───────
+
+
 function fixLabelOverflow(g) {
   g.querySelectorAll('foreignObject div').forEach(function(d) {
-    if (d.style.maxHeight || d.style.overflow === 'hidden') {
-      d.style.maxHeight = 'none';
-      d.style.overflow  = 'visible';
-    }
+    d.style.maxHeight  = 'none';
+    d.style.overflow   = 'visible';
+    d.style.whiteSpace = 'nowrap';
+    d.style.width      = 'auto';
   });
   var fo = g.querySelector('foreignObject');
   if (fo) {
     fo.style.overflow = 'visible';
-    var currentH = parseFloat(fo.getAttribute('height')) || 0;
-    if (currentH > 0 && currentH < 60) fo.setAttribute('height', '100%');
+    fo.style.width    = 'auto';
+    fo.setAttribute('width',  '9999');
+    fo.setAttribute('height', '9999');
   }
 }
 
