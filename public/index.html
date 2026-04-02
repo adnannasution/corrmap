@@ -3174,14 +3174,10 @@ function fixLabelOverflow(g) {
     d.style.maxHeight  = 'none';
     d.style.overflow   = 'visible';
     d.style.whiteSpace = 'nowrap';
-    d.style.width      = 'auto';
   });
   var fo = g.querySelector('foreignObject');
   if (fo) {
     fo.style.overflow = 'visible';
-    fo.style.width    = 'auto';
-    fo.setAttribute('width',  '9999');
-    fo.setAttribute('height', '9999');
   }
 }
 
