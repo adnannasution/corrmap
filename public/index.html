@@ -1179,40 +1179,43 @@ function getLvFromCorrosion(rate, thickness) {
   return w1 >= w2 ? lv1 : lv2;
 }
 
-// Get fill color for a tag+mode (used by applyColors)
 function getColorForTag(tag, mode) {
-  var d = COND[tag]; if (!d) return null;
+  var d = COND[tag]; if (!d) return '#9e9e9e'; // gray jika tidak ada data
   if (mode === 'visual') {
     var n = parseInt(d.visual_value) || 0;
-    if (!n) { // fallback: map visual_level label to index
+    if (!n) {
       var labels = COLOR_SCALES.visual.map(function(s){return s.label;});
       n = labels.indexOf(d.visual_level) + 1;
     }
     var entry = COLOR_SCALES.visual[n - 1];
-    return entry ? entry.color : null;
+    // Gray jika visual_level null/kosong
+    if (!entry || (!d.visual_value && !d.visual_level)) return '#9e9e9e';
+    return entry.color;
   }
   if (mode === 'corrosion') {
-    var r = getLvAndColor('corr_rate', d.corrosion_rate);
-    var t = getLvAndColor('thickness',  d.thickness);
-    // worst of the two
+    var cr  = parseFloat(d.corrosion_rate) || 0;
+    var thk = parseFloat(d.thickness) || 0;
+    // Gray jika keduanya null/0
+    if (!cr && !thk) return '#9e9e9e';
+    var r = getLvAndColor('corr_rate', cr);
+    var t = getLvAndColor('thickness', thk);
     var labels2 = COLOR_SCALES.corr_rate.map(function(s){return s.label;});
-    if (!r && !t) return null;
+    // Jika salah satu null, pakai yang ada
+    if (!r && !t) return '#9e9e9e';
     if (!r) return t.color;
     if (!t) return r.color;
     return labels2.indexOf(r.label) >= labels2.indexOf(t.label) ? r.color : t.color;
   }
-// SESUDAH:
-if (mode === 'rl') {
-    var rl = getLvAndColor('rl', d.rl_value);
-    if (rl) return rl.color;
+  if (mode === 'rl') {
     var rlV = parseFloat(String(d.rl_value).replace(',','.'));
-    if (!isNaN(rlV) && rlV > 0) {
-      var lowEntry = COLOR_SCALES.rl[0];
-      return lowEntry ? lowEntry.color : null;
-    }
-    return null;
-}
-  return null;
+    // Gray jika null/0
+    if (!rlV || rlV <= 0) return '#9e9e9e';
+    var rl = getLvAndColor('rl', rlV);
+    if (rl) return rl.color;
+    var lowEntry = COLOR_SCALES.rl[0];
+    return lowEntry ? lowEntry.color : '#9e9e9e';
+  }
+  return '#9e9e9e';
 }
 
 // Push ALL current tags from SVG to DB in one bulk call
