@@ -2019,9 +2019,16 @@ function getData(){
       const mt=ft==='all'||e.type===ft; return mq&&mt;
     });
   }
-  return Object.values(COND).filter(d=>{
-    // Hanya tampilkan tag yang ada di EQUIP_LIST
-    if(!validTags.has(d.tag)) return false;
+const emptyEntry = (tag, type) => ({
+    tag, type: type||'',
+    visual_level:'', visual_notes:'', visual_value:0,
+    corrosion_level:'', corrosion_rate:0, thickness:0,
+    rl_value:0, rl_level:''
+  });
+  const merged = EQUIP_LIST.map(function(e){
+    return COND[e.tag] ? Object.assign({}, emptyEntry(e.tag, e.type), COND[e.tag]) : emptyEntry(e.tag, e.type);
+  });
+  return merged.filter(d=>{
     const lv=curTab==='visual'?d.visual_level:curTab==='corrosion'?d.corrosion_level:d.rl_level;
     const mq=!q||d.tag.toLowerCase().includes(q)||(d.type||'').toLowerCase().includes(q);
     const ml=fl==='all'||lv===fl; const mt=ft==='all'||d.type===ft;
