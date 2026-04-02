@@ -2527,6 +2527,15 @@ document.querySelectorAll('#diagram-inner g').forEach(function(g) {
   }
 });
 
+// ── Set semua garis ke hitam saat load default ──
+document.querySelectorAll('#diagram-inner g[data-tag]').forEach(function(g) {
+  var saved = origColors.get(g);
+  if (!saved) return;
+  saved.forEach(function(s) {
+    if (s.isLine) s.el.setAttribute('stroke', '#000000');
+  });
+});
+
 // Load tags + conditions from DB on startup
 (async () => {
   const sb = document.getElementById('sb');
