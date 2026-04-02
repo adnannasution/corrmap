@@ -2516,6 +2516,14 @@ storeOrig();
 applyVB();
 refreshTypeDropdowns();
 
+
+// ── Fix semua label overflow di SVG saat load ──
+document.querySelectorAll('#diagram-inner g').forEach(function(g) {
+  if (g.querySelector('foreignObject')) {
+    fixLabelOverflow(g);
+  }
+});
+
 // Load tags + conditions from DB on startup
 (async () => {
   const sb = document.getElementById('sb');
