@@ -2635,6 +2635,7 @@ refreshTypeDropdowns();
             else if (plainEl2) plainEl2.textContent  = lv.main;
             if (fontEl2 && lv.sub) fontEl2.textContent = lv.sub;
             lg.setAttribute('data-lbl-key', lkey);
+            fixLabelOverflow(lg); // ← pastikan baris ini ada
           }
         });
       });
