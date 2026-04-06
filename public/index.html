@@ -109,7 +109,12 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f0f2f5;color:#222;height
 .sv-btn:hover{background:#0d47a1}
 .fl{color:#2e7d32;font-size:10px;font-weight:600;padding:2px 6px}
 
-/* ── Upload panel ── */
+/* ── Loading overlay ── */
+#db-loading-overlay{position:fixed;inset:0;background:rgba(15,25,50,.72);z-index:9000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .3s}
+#db-loading-overlay.hide{opacity:0;pointer-events:none}
+.dbl-spinner{width:44px;height:44px;border:4px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.dbl-text{color:#fff;font-size:13px;font-weight:600;letter-spacing:.3px}
 .upload-panel{background:#f8faff;border:2px dashed #b3c8f5;border-radius:10px;padding:18px 20px;margin-bottom:14px}
 .up-main-zone{display:flex;align-items:center;gap:14px;background:#fff;border:1.5px solid #d0e2ff;border-radius:10px;padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(21,101,192,.06)}
 .up-main-icon{font-size:28px;flex-shrink:0}
@@ -274,6 +279,12 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f0f2f5;color:#222;height
 
 <!-- ─── Legend ─────────────────────────────────────────── -->
 
+
+<!-- ─── DB Loading Overlay ──────────────────────────────── -->
+<div id="db-loading-overlay">
+  <div class="dbl-spinner"></div>
+  <div class="dbl-text">⏳ Memuat data dari database...</div>
+</div>
 
 <!-- ─── Diagram ────────────────────────────────────────── -->
 <div class="diag-wrap">
@@ -2558,28 +2569,24 @@ document.querySelectorAll('#diagram-inner g[data-tag]').forEach(function(g) {
 // Load tags + conditions from DB on startup
 (async () => {
   const sb = document.getElementById('sb');
+  const dbOverlay = document.getElementById('db-loading-overlay');
 
   if (API_URL) {
     // ── Load tags from DB → apply to SVG ──────────────────────────────
     const remoteTags = await apiGet('/api/tags');
     if (remoteTags && Object.keys(remoteTags).length > 0) {
       let tagUpdated = 0;
-      var tagRenames = {}; // oldTag → newTag map for second-pass label update
       Object.values(remoteTags).forEach(function(row) {
         var g = document.querySelector('#diagram-inner g[data-uid="' + row.uid + '"]');
         if (!g) return;
         var oldTag = g.getAttribute('data-tag') || '';
-        // Apply tag
         g.setAttribute('data-tag', row.tag);
-        // Rebuild data-tip with new tag + type
         var tip = g.getAttribute('data-tip') || '';
-        // Update Tag line
         if (tip.match(/^Tag: /m)) {
           tip = tip.replace(/^Tag: .*/m, 'Tag: ' + row.tag);
         } else {
           tip = tip + '\nTag: ' + row.tag;
         }
-        // Update Type line
         if (row.type) {
           if (tip.match(/^Type: /m)) {
             tip = tip.replace(/^Type: .*/m, 'Type: ' + row.type);
@@ -2588,38 +2595,14 @@ document.querySelectorAll('#diagram-inner g[data-tag]').forEach(function(g) {
           }
         }
         g.setAttribute('data-tip', tip);
-        // Also update BEST_TIPS with new tip
         BEST_TIPS[row.tag] = tip;
-        // Update SVG text label INSIDE g (equipment/vessel/HE)
-        g.querySelectorAll('foreignObject div').forEach(function(d) {
-          if (d.children.length === 0 && d.textContent.trim() === oldTag) d.textContent = row.tag;
-        });
-        // Fix label clipping for elements whose text may be longer than original
         fixLabelOverflow(g);
-        // Track rename for second-pass label update (pipes/lines label is after LAST segment)
-        if (oldTag !== row.tag) tagRenames[oldTag] = row.tag;
-        // Update BEST_TIPS + EQUIP_LIST
         if (BEST_TIPS[oldTag]) { BEST_TIPS[row.tag] = BEST_TIPS[oldTag]; if (oldTag !== row.tag) delete BEST_TIPS[oldTag]; }
         var eqIdx = EQUIP_LIST.findIndex(function(e){ return e.tag === oldTag; });
         if (eqIdx >= 0) { EQUIP_LIST[eqIdx].tag = row.tag; if (row.type) EQUIP_LIST[eqIdx].type = row.type; }
-        // Update COND key
         if (COND[oldTag] && oldTag !== row.tag) { COND[row.tag] = COND[oldTag]; COND[row.tag].tag = row.tag; delete COND[oldTag]; }
         tagUpdated++;
       });
-
-      // ── Second pass: update ALL label siblings for renamed tags ──────
-      // Label <g> siblings have no data-tag/data-uid and contain foreignObject
-      // They appear after the LAST segment of each pipe/line group
-      if (Object.keys(tagRenames).length > 0) {
-        document.querySelectorAll('#diagram-inner g:not([data-tag]):not([data-uid])').forEach(function(labelG) {
-          labelG.querySelectorAll('foreignObject div').forEach(function(d) {
-            if (d.children.length === 0) {
-              var txt = d.textContent.trim();
-              if (tagRenames[txt]) d.textContent = tagRenames[txt];
-            }
-          });
-        });
-      }
 
       console.log('✅ Applied', tagUpdated, 'tags from DB');
       refreshTypeDropdowns();
@@ -2678,27 +2661,41 @@ document.querySelectorAll('#diagram-inner g[data-tag]').forEach(function(g) {
     if (remoteLabels && Object.keys(remoteLabels).length > 0) {
       Object.keys(remoteLabels).forEach(function(lkey) {
         var lv = remoteLabels[lkey];
-        // Find g elements with data-lbl-key matching, or find by text content
         var originalText = lkey.replace(/^lbl:/, '');
-        // Search all label g elements (no data-uid, has foreignObject)
-        document.querySelectorAll('#diagram-inner g:not([data-uid])').forEach(function(lg) {
-          var bEl2    = lg.querySelector('foreignObject b');
-          var plainEl2 = null;
-          if (!bEl2) {
-            lg.querySelectorAll('foreignObject div').forEach(function(d) {
-              if (d.children.length === 0 && d.textContent.trim() === originalText) plainEl2 = d;
-            });
-          }
-          var fontEl2 = lg.querySelector('foreignObject font');
-          var curText = bEl2 ? bEl2.textContent.trim() : (plainEl2 ? plainEl2.textContent.trim() : '');
-          if (curText === originalText || lg.getAttribute('data-lbl-key') === lkey) {
-            if (bEl2)          bEl2.textContent     = lv.main;
-            else if (plainEl2) plainEl2.textContent  = lv.main;
-            if (fontEl2 && lv.sub) fontEl2.textContent = lv.sub;
-            lg.setAttribute('data-lbl-key', lkey);
-            fixLabelOverflow(lg); // ← pastikan baris ini ada
-          }
+        var applied = false;
+        // Pass 1: cari via data-lbl-key (paling reliable)
+        document.querySelectorAll('#diagram-inner g[data-lbl-key]').forEach(function(lg) {
+          if (applied) return;
+          if (lg.getAttribute('data-lbl-key') !== lkey) return;
+          var bEl = lg.querySelector('foreignObject b');
+          var plainEl = null;
+          if (!bEl) { lg.querySelectorAll('foreignObject div').forEach(function(d){ if (d.children.length===0 && d.textContent.trim()) plainEl=d; }); }
+          var fontEl = lg.querySelector('foreignObject font');
+          if (bEl) bEl.textContent = lv.main;
+          else if (plainEl) plainEl.textContent = lv.main;
+          if (fontEl && lv.sub) fontEl.textContent = lv.sub;
+          fixLabelOverflow(lg);
+          applied = true;
         });
+        // Pass 2: fallback cari via teks asli
+        if (!applied) {
+          document.querySelectorAll('#diagram-inner g:not([data-uid])').forEach(function(lg) {
+            if (applied) return;
+            var bEl = lg.querySelector('foreignObject b');
+            var plainEl = null;
+            if (!bEl) { lg.querySelectorAll('foreignObject div').forEach(function(d){ if (d.children.length===0 && d.textContent.trim()===originalText) plainEl=d; }); }
+            var fontEl = lg.querySelector('foreignObject font');
+            var curText = bEl ? bEl.textContent.trim() : (plainEl ? plainEl.textContent.trim() : '');
+            if (curText === originalText) {
+              if (bEl) bEl.textContent = lv.main;
+              else if (plainEl) plainEl.textContent = lv.main;
+              if (fontEl && lv.sub) fontEl.textContent = lv.sub;
+              lg.setAttribute('data-lbl-key', lkey);
+              fixLabelOverflow(lg);
+              applied = true;
+            }
+          });
+        }
       });
       console.log('✅ Label overrides loaded:', Object.keys(remoteLabels).length);
     }
@@ -2709,6 +2706,12 @@ document.querySelectorAll('#diagram-inner g[data-tag]').forEach(function(g) {
     }
   } else {
     console.log('📁 Offline mode — using built-in data');
+  }
+
+  // Sembunyikan loading overlay setelah semua data siap
+  if (dbOverlay) {
+    dbOverlay.classList.add('hide');
+    setTimeout(function(){ dbOverlay.style.display='none'; }, 350);
   }
 
   applyColors();
@@ -3085,17 +3088,10 @@ function saveEdit() {
   }
   g.setAttribute('data-tip', tip);
 
-  // Update SVG text label inside this g if it shows old tag
+  // Update teks HANYA di dalam objek g ini saja (label diagram tidak ikut berubah)
   g.querySelectorAll('foreignObject div').forEach(function(d) {
     if (d.children.length === 0 && d.textContent.trim() === oldTag) d.textContent = newTag;
   });
-  // Check next sibling for label
-  var next = g.nextElementSibling;
-  if (next && !next.hasAttribute('data-tag')) {
-    next.querySelectorAll('foreignObject div').forEach(function(d) {
-      if (d.children.length === 0 && d.textContent.trim() === oldTag) d.textContent = newTag;
-    });
-  }
 
   // Update BEST_TIPS
   var bt = BEST_TIPS[oldTag] || tip;
@@ -3289,6 +3285,12 @@ function openLabelEdit(g) {
   var currentMain = bEl ? bEl.textContent.trim() : (plainEl ? plainEl.textContent.trim() : '');
   var currentSub  = fontEl ? fontEl.textContent.trim() : '';
 
+  // ── Pastikan data-lbl-key sudah di-set SEBELUM user simpan,
+  //    pakai teks DOM saat ini (= teks asli kalau belum pernah diedit) ──
+  if (!g.getAttribute('data-lbl-key') && currentMain) {
+    g.setAttribute('data-lbl-key', 'lbl:' + currentMain);
+  }
+
   // Tampilkan/sembunyikan field sub-label
   var subRow = document.getElementById('lbl-edit-sub-row');
   subRow.style.display = (bEl || fontEl) ? '' : 'none';
@@ -3323,7 +3325,7 @@ function saveLabelEdit() {
     });
   }
 
-  // Simpan nilai LAMA sebelum diubah (untuk cari sibling)
+  // Ambil teks LAMA sebelum DOM diubah
   var oldMain = bEl ? bEl.textContent.trim() : (plainEl ? plainEl.textContent.trim() : '');
 
   if (bEl)          bEl.textContent    = newMain;
@@ -3345,62 +3347,18 @@ function saveLabelEdit() {
     if (currentH > 0 && currentH < 60) fo.setAttribute('height', '100%');
   }
 
-  // ── Save label to DB ──────────────────────────────────────────────────────
+  // ── Save label ke DB — key sudah di-set di openLabelEdit, tidak berubah walau teks diedit ──
+  var lkey = g.getAttribute('data-lbl-key') || ('lbl:' + (oldMain || newMain));
+  g.setAttribute('data-lbl-key', lkey); // pastikan tersimpan di DOM
   if (API_URL) {
-    var uid  = g.getAttribute('data-uid');
-    var tag  = g.getAttribute('data-tag') || oldMain;
-
-    // Cari data-uid dari sibling/nearby g yang data-tip-nya mengandung label LAMA
-    if (!uid) {
-      var parentG = g.parentElement;
-      if (parentG) {
-        var siblings = parentG.querySelectorAll('g[data-uid]');
-        siblings.forEach(function(sg) {
-          if (uid) return;
-          var stip = sg.getAttribute('data-tip') || '';
-          var stag = sg.getAttribute('data-tag') || '';
-          if (oldMain && (stip.indexOf(oldMain) >= 0 || stag === oldMain)) {
-            uid = sg.getAttribute('data-uid');
-          }
-        });
-      }
-    }
-
-    // Fallback: simpan label sebagai settings key kalau tidak ada uid
-    // Pakai key "label:<oldMain>" sehingga bisa di-restore saat load
-    var tipType = '';
-    var nearG = uid ? document.querySelector('#diagram-inner g[data-uid="' + uid + '"]') : null;
-    if (nearG) {
-      var tip = nearG.getAttribute('data-tip') || '';
-      tip.split('\n').forEach(function(l){ if(l.startsWith('Type: ')) tipType = l.slice(6); });
-    }
-    var typeToSave = newSub || tipType;
-
-    if (uid) {
-      apiPost('/api/tags', { uid: uid, tag: newMain, type: typeToSave })
-        .then(function(result) {
-          if (!result) return;
-          var indicator = document.createElement('div');
-          indicator.textContent = '✓ Tersimpan';
-          indicator.style.cssText = 'position:fixed;bottom:60px;right:20px;background:#2e7d32;color:#fff;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:700;z-index:9999;box-shadow:0 2px 8px rgba(0,0,0,.2)';
-          document.body.appendChild(indicator);
-          setTimeout(function(){ document.body.removeChild(indicator); }, 2000);
-        });
-    } else {
-      // Tidak ada uid — simpan sebagai label override via /api/labels
-      var lkey = 'lbl:' + (oldMain || newMain);
-      apiPost('/api/labels', { lbl_key: lkey, main_text: newMain, sub_text: newSub })
-        .then(function(result) {
-          var ok = !!result;
-          var indicator2 = document.createElement('div');
-          indicator2.textContent = ok ? '✓ Label tersimpan' : '⚠ Label diperbarui (lokal saja)';
-          indicator2.style.cssText = 'position:fixed;bottom:60px;right:20px;background:' + (ok ? '#2e7d32' : '#e65100') + ';color:#fff;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:700;z-index:9999;box-shadow:0 2px 8px rgba(0,0,0,.2)';
-          document.body.appendChild(indicator2);
-          setTimeout(function(){ document.body.removeChild(indicator2); }, 2500);
-        });
-      // Tandai g agar bisa dicari saat load
-      g.setAttribute('data-lbl-key', lkey);
-    }
+    apiPost('/api/labels', { lbl_key: lkey, main_text: newMain, sub_text: newSub })
+      .then(function(result) {
+        var ind = document.createElement('div');
+        ind.textContent = result ? '✓ Label tersimpan' : '⚠ Label diperbarui (lokal saja)';
+        ind.style.cssText = 'position:fixed;bottom:60px;right:20px;background:' + (result ? '#2e7d32' : '#e65100') + ';color:#fff;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:700;z-index:9999;box-shadow:0 2px 8px rgba(0,0,0,.2)';
+        document.body.appendChild(ind);
+        setTimeout(function(){ document.body.removeChild(ind); }, 2500);
+      });
   }
 
   closeLabelEdit();
@@ -3423,7 +3381,8 @@ if (_editTypeCustom) _editTypeCustom.addEventListener('keydown', function(e) {
   if (e.key === 'Enter') saveEdit();
 });
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape' && document.getElementById('edit-overlay').classList.contains('open')) {
+  var _ov = document.getElementById('edit-overlay');
+  if (e.key === 'Escape' && _ov && _ov.classList.contains('open')) {
     closeEdit();
   }
 });
@@ -3431,7 +3390,8 @@ document.addEventListener('keydown', function(e) {
 // ══════════════════════════════════════════════════════
 //  DOWNLOAD HTML (bake current tags into static HTML)
 // ══════════════════════════════════════════════════════
-document.getElementById('btn-download').addEventListener('click', async function() {
+var _btnDl = document.getElementById('btn-download');
+if (_btnDl) _btnDl.addEventListener('click', async function() {
   const btn = this;
   btn.disabled = true;
   btn.textContent = '⏳ Menyiapkan...';
